@@ -1,16 +1,17 @@
 :root{
-  --forest:#173d34;
-  --forest-2:#24594b;
-  --forest-3:#dfeae5;
-  --paper:#f6f4ed;
-  --white:#fff;
-  --ink:#18211e;
-  --muted:#6c756f;
-  --line:#dfe4df;
-  --soft:#eef3ef;
-  --gold:#b68b47;
+  --forest:#228B22;
+  --forest-2:#176f1b;
+  --forest-3:#dcefdc;
+  --paper:#F5F5DC;
+  --white:#ffffff;
+  --ink:#333333;
+  --muted:#66645d;
+  --line:#dedccf;
+  --soft:#f8f7e9;
+  --gold:#D4AF37;
+  --gold-soft:#f3e8b6;
   --danger:#a44646;
-  --shadow:0 24px 70px rgba(20,49,41,.10);
+  --shadow:0 24px 70px rgba(34,139,34,.14);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -18,7 +19,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",san
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .shell{width:min(1180px,calc(100% - 36px));margin:auto}
-.site-header{position:sticky;top:0;z-index:1000;background:rgba(23,61,52,.96);backdrop-filter:blur(12px);color:white}
+.site-header{position:sticky;top:0;z-index:1000;background:rgba(34,139,34,.96);backdrop-filter:blur(12px);color:white}
 .nav{height:76px;display:flex;align-items:center;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:11px;color:white;text-decoration:none}
 .logo{height:44px;width:auto;object-fit:contain}
@@ -69,7 +70,7 @@ button{cursor:pointer}
 .journey-sidebar li.complete button span:after{content:" ✓"}
 
 #waitlistForm{min-width:0}
-.step-panel{display:none;border:1px solid var(--line);border-radius:24px;padding:34px;background:white;box-shadow:0 12px 38px rgba(20,49,41,.05);animation:stepIn .25s ease}
+.step-panel{display:none;border:1px solid var(--line);border-radius:24px;padding:34px;background:white;box-shadow:0 12px 38px rgba(34,139,34,.07);animation:stepIn .25s ease}
 .step-panel.active{display:block}
 @keyframes stepIn{from{opacity:.3;transform:translateY(8px)}to{opacity:1;transform:none}}
 .step-heading{margin-bottom:30px}
@@ -81,7 +82,7 @@ button{cursor:pointer}
 .form-grid .full{grid-column:1/-1}
 label{display:block;font-size:12px;font-weight:700;color:#4e5853}
 input,select,textarea{width:100%;margin-top:7px;border:1px solid var(--line);border-radius:11px;padding:13px;background:white;color:var(--ink);outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--forest-2);box-shadow:0 0 0 3px rgba(36,89,75,.08)}
+input:focus,select:focus,textarea:focus{border-color:var(--forest-2);box-shadow:0 0 0 3px rgba(34,139,34,.10)}
 
 .map-block{margin-top:24px}
 .map-title{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:12px}
@@ -98,7 +99,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--forest-2);box-shadow:
 .location-result small{color:var(--muted);margin-top:3px}
 #map{height:360px;border-radius:16px;border:1px solid var(--line);overflow:hidden;z-index:1}
 .location-confirmation{display:flex;gap:12px;align-items:flex-start;background:var(--soft);border-radius:13px;padding:13px;margin-top:10px}
-.pin-dot{width:13px;height:13px;border-radius:50%;background:var(--forest);box-shadow:0 0 0 5px rgba(23,61,52,.12);margin:6px}
+.pin-dot{width:13px;height:13px;border-radius:50%;background:var(--forest);box-shadow:0 0 0 5px rgba(34,139,34,.15);margin:6px}
 .location-confirmation span,.location-confirmation b,.location-confirmation small{display:block}
 .location-confirmation span{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold)}
 .location-confirmation b{font-size:13px;margin-top:3px}
@@ -170,7 +171,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--forest-2);box-shadow:
 .notes-label{margin-top:22px}
 
 .review-card{background:var(--soft);border-radius:16px;padding:17px;margin-bottom:18px;display:grid;gap:12px}
-.review-row{display:flex;justify-content:space-between;gap:18px;border-bottom:1px solid rgba(23,61,52,.1);padding-bottom:10px}
+.review-row{display:flex;justify-content:space-between;gap:18px;border-bottom:1px solid rgba(34,139,34,.12);padding-bottom:10px}
 .review-row:last-child{border-bottom:0;padding-bottom:0}
 .review-row span{font-size:11px;color:var(--muted)}
 .review-row b{font-size:12px;text-align:right}
@@ -267,5 +268,230 @@ dialog button{border:0;background:var(--forest);color:white;padding:12px 24px;bo
   }
   .cooking-options label:first-child{
     grid-column:1/-1;
+  }
+}
+
+
+/* v1.6 MyFarmBox brand colour system */
+body{
+  background:var(--paper);
+}
+
+.hero{
+  position:relative;
+}
+
+.hero:before{
+  content:"";
+  position:absolute;
+  inset:28px -20px 28px -20px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(212,175,55,.16), transparent 28%),
+    linear-gradient(135deg, rgba(34,139,34,.10), rgba(245,245,220,.38));
+  border-radius:34px;
+  z-index:-1;
+}
+
+.principles{
+  background:var(--forest);
+  color:white;
+  border-color:rgba(255,255,255,.18);
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:90px;
+}
+
+.principles article{
+  border-color:rgba(255,255,255,.18);
+}
+
+.principles article>span{
+  color:var(--gold);
+}
+
+.principles p{
+  color:rgba(255,255,255,.78);
+}
+
+.journey-section{
+  background:
+    linear-gradient(
+      to bottom,
+      var(--white) 0,
+      var(--white) 17%,
+      var(--paper) 17%,
+      var(--paper) 33%,
+      var(--white) 33%,
+      var(--white) 50%,
+      var(--forest-3) 50%,
+      var(--forest-3) 67%,
+      var(--white) 67%,
+      var(--white) 84%,
+      var(--paper) 84%,
+      var(--paper) 100%
+    );
+}
+
+.step-panel{
+  border-color:rgba(34,139,34,.18);
+}
+
+.step-panel[data-step="0"],
+.step-panel[data-step="2"],
+.step-panel[data-step="4"]{
+  background:var(--white);
+}
+
+.step-panel[data-step="1"],
+.step-panel[data-step="5"]{
+  background:var(--paper);
+}
+
+.step-panel[data-step="3"]{
+  background:var(--forest-3);
+}
+
+.step-panel[data-step="3"] .budget-options span,
+.step-panel[data-step="3"] .priority-grid span{
+  background:rgba(255,255,255,.8);
+}
+
+.step-panel[data-step="3"] .budget-options input:checked+span,
+.step-panel[data-step="3"] .priority-grid input:checked+span{
+  background:var(--forest);
+  color:white;
+  border-color:var(--forest);
+}
+
+.journey-sidebar{
+  border-color:rgba(34,139,34,.22);
+  background:var(--paper);
+}
+
+.journey-sidebar li.active button{
+  box-shadow:0 8px 20px rgba(34,139,34,.18);
+}
+
+.progress-ring{
+  border-color:var(--forest-3);
+  box-shadow:inset 0 0 0 1px white,0 0 0 1px rgba(34,139,34,.08);
+}
+
+.primary-btn,
+.next-btn,
+.submit-btn,
+.location-search button{
+  background:var(--forest);
+  box-shadow:0 10px 24px rgba(34,139,34,.18);
+}
+
+.primary-btn:hover,
+.next-btn:hover,
+.submit-btn:hover,
+.location-search button:hover{
+  background:var(--forest-2);
+}
+
+.secondary-btn,
+.back-btn{
+  border-color:rgba(34,139,34,.25);
+}
+
+.counter-card,
+.location-confirmation,
+.review-card{
+  background:var(--soft);
+}
+
+.counter button{
+  border-color:rgba(34,139,34,.25);
+}
+
+.compact-options input:checked+span,
+.priority-grid input:checked+span,
+.tabs button.active{
+  background:var(--forest);
+  border-color:var(--forest);
+}
+
+.large-options input:checked+span,
+.budget-options input:checked+span{
+  background:var(--forest-3);
+  border-color:var(--forest);
+}
+
+.product-row.selected{
+  background:var(--forest-3);
+  border-color:var(--forest);
+}
+
+.selection-summary{
+  background:var(--forest);
+}
+
+.contact-section{
+  background:var(--forest);
+  color:white;
+}
+
+.contact-section .eyebrow{
+  color:var(--gold);
+}
+
+.contact-card{
+  background:var(--paper);
+  border-color:rgba(255,255,255,.18);
+}
+
+.contact-card a{
+  color:var(--forest);
+}
+
+footer{
+  background:#176f1b;
+}
+
+footer:before{
+  content:"";
+  display:block;
+  height:4px;
+  background:var(--gold);
+  margin-top:-32px;
+  margin-bottom:28px;
+}
+
+.success-mark{
+  background:var(--gold-soft);
+}
+
+dialog strong{
+  color:var(--forest);
+}
+
+@media(max-width:580px){
+  .hero:before{
+    inset:16px -8px;
+    border-radius:22px;
+  }
+
+  .principles{
+    margin-bottom:55px;
+  }
+
+  .journey-section{
+    background:var(--white);
+  }
+
+  .step-panel[data-step="0"],
+  .step-panel[data-step="1"],
+  .step-panel[data-step="2"],
+  .step-panel[data-step="3"],
+  .step-panel[data-step="4"],
+  .step-panel[data-step="5"]{
+    background:var(--white);
+  }
+
+  .journey-sidebar{
+    background:var(--paper);
   }
 }
