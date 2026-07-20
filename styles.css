@@ -495,3 +495,341 @@ dialog strong{
     background:var(--paper);
   }
 }
+
+
+/* =========================================================
+   MyFarmBox Singapore Founding Harvest v2.0
+   ========================================================= */
+
+.journey-progress-card {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px solid rgba(34,139,34,.16);
+  border-radius: 18px;
+  background: rgba(245,245,220,.6);
+}
+
+.journey-progress-copy,
+.catalog-progress > div:first-child,
+.resume-progress > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.journey-progress-copy span,
+.catalog-progress b,
+.resume-progress span {
+  font-size: .78rem;
+  color: #5e6d64;
+}
+
+.journey-progress-copy b {
+  font-size: .75rem;
+  color: #228B22;
+}
+
+.journey-progress-track,
+.catalog-progress-track {
+  width: 100%;
+  height: 7px;
+  margin-top: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(34,139,34,.12);
+}
+
+.journey-progress-track span,
+.catalog-progress-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg,#228B22,#4da84d);
+  transition: width .35s ease;
+}
+
+.mobile-save-strip {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  background: #f4f8f1;
+  color: #52705d;
+  font-size: .76rem;
+}
+
+.save-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #228B22;
+  box-shadow: 0 0 0 4px rgba(34,139,34,.1);
+}
+
+.seasonal-note {
+  display: flex;
+  gap: 14px;
+  padding: 17px 18px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(34,139,34,.18);
+  border-radius: 18px;
+  background: linear-gradient(135deg,#f4faef,#fbf8e8);
+}
+
+.seasonal-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 6px 18px rgba(27,66,43,.08);
+}
+
+.seasonal-note b {
+  display: block;
+  margin-bottom: 4px;
+  color: #1b4b2d;
+}
+
+.seasonal-note p {
+  margin: 0;
+  font-size: .83rem;
+  line-height: 1.55;
+  color: #617066;
+}
+
+.catalog-progress {
+  margin: 18px 0 14px;
+}
+
+.catalog-progress span {
+  font-size: .75rem;
+  color: #7a877f;
+}
+
+.catalog-pagination {
+  display: grid;
+  grid-template-columns: minmax(90px,auto) 1fr minmax(90px,auto);
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.catalog-pagination button {
+  min-height: 42px;
+  border: 1px solid rgba(34,139,34,.2);
+  border-radius: 13px;
+  background: white;
+  color: #1d5c2d;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.catalog-pagination button:disabled {
+  opacity: .38;
+  cursor: default;
+}
+
+.page-dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.page-dots button {
+  min-width: 8px;
+  width: 8px;
+  min-height: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(34,139,34,.18);
+}
+
+.page-dots button.active {
+  width: 24px;
+  background: #228B22;
+}
+
+.harvest-profile-hero {
+  padding: 24px;
+  border-radius: 24px;
+  background: linear-gradient(145deg,#165b2b,#228B22);
+  color: white;
+  box-shadow: 0 18px 45px rgba(28,88,43,.18);
+}
+
+.harvest-profile-hero span {
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: .76;
+}
+
+.harvest-profile-hero h4 {
+  margin: 8px 0 7px;
+  color: white;
+  font-size: 1.45rem;
+}
+
+.harvest-profile-hero p {
+  margin: 0;
+  color: rgba(255,255,255,.78);
+  font-size: .85rem;
+  line-height: 1.6;
+}
+
+.harvest-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 13px;
+  margin-top: 16px;
+}
+
+.profile-card {
+  padding: 18px;
+  border: 1px solid rgba(34,139,34,.13);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.profile-card span {
+  display: block;
+  margin-bottom: 7px;
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #78837c;
+}
+
+.profile-card b {
+  display: block;
+  color: #24422e;
+  font-size: .96rem;
+}
+
+.profile-card small {
+  display: block;
+  margin-top: 5px;
+  color: #718078;
+}
+
+.profile-note {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 17px;
+  background: #f7f6eb;
+}
+
+.profile-note b {
+  color: #385943;
+}
+
+.profile-note p {
+  margin: 4px 0 0;
+  color: #6f796f;
+  font-size: .8rem;
+  line-height: 1.5;
+}
+
+.resume-dialog {
+  max-width: 460px;
+  border-radius: 28px;
+  text-align: left;
+}
+
+.resume-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 16px;
+  border-radius: 17px;
+  background: #eef7e8;
+  font-size: 1.45rem;
+}
+
+.resume-dialog h2 {
+  margin: 7px 0;
+}
+
+.resume-progress {
+  padding: 15px;
+  margin: 18px 0;
+  border-radius: 16px;
+  background: #f5f7ef;
+}
+
+.resume-progress b {
+  color: #2b5636;
+  font-size: .78rem;
+}
+
+.resume-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.resume-actions .primary-btn,
+.resume-actions .secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin: 0;
+  text-decoration: none;
+}
+
+.product-list {
+  min-height: 430px;
+}
+
+@media (max-width: 820px) {
+  .mobile-save-strip {
+    display: flex;
+    position: sticky;
+    top: 68px;
+    z-index: 20;
+  }
+
+  .harvest-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-progress-card {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .seasonal-note {
+    padding: 14px;
+  }
+
+  .catalog-pagination {
+    grid-template-columns: 1fr 70px 1fr;
+  }
+
+  .page-dots button:nth-child(n+8) {
+    display: none;
+  }
+
+  .resume-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .product-list {
+    min-height: 0;
+  }
+}

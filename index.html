@@ -96,7 +96,7 @@
         <aside class="journey-sidebar" aria-label="Form progress">
           <div class="progress-ring" id="progressRing">
             <span id="progressNumber">1</span>
-            <small>of 6</small>
+            <small>of 7</small>
           </div>
 
           <ol id="stepNav">
@@ -105,11 +105,26 @@
             <li><button type="button" data-go="2"><span>03</span>Select produce</button></li>
             <li><button type="button" data-go="3"><span>04</span>Budget & values</button></li>
             <li><button type="button" data-go="4"><span>05</span>Launch preference</button></li>
-            <li><button type="button" data-go="5"><span>06</span>Consent</button></li>
+            <li><button type="button" data-go="5"><span>06</span>Harvest profile</button></li>
+            <li><button type="button" data-go="6"><span>07</span>Consent</button></li>
           </ol>
+
+          <div class="journey-progress-card">
+            <div class="journey-progress-copy">
+              <span id="journeyProgressLabel">14% complete</span>
+              <b id="saveStatus">Ready</b>
+            </div>
+            <div class="journey-progress-track">
+              <span id="journeyProgressBar"></span>
+            </div>
+          </div>
         </aside>
 
         <form id="waitlistForm" novalidate>
+          <div class="mobile-save-strip" aria-live="polite">
+            <span class="save-dot"></span>
+            <span id="mobileSaveStatus">Your progress is saved automatically</span>
+          </div>
           <!-- Step 1 -->
           <section class="step-panel active" data-step="0">
             <div class="step-heading">
@@ -230,6 +245,18 @@
               <p>Select produce and a typical weekly quantity. You can change this later.</p>
             </div>
 
+            <div class="seasonal-note">
+              <span class="seasonal-icon">🌱</span>
+              <div>
+                <b>Seasonal harvest</b>
+                <p>
+                  Your selections guide our harvest planning. Produce will be harvested and
+                  delivered according to natural growing seasons, harvest readiness and farm availability,
+                  so every selected item may not be available every week.
+                </p>
+              </div>
+            </div>
+
             <div class="catalog-toolbar">
               <div class="search-wrap">
                 <span>⌕</span>
@@ -238,8 +265,24 @@
               <div id="categoryTabs" class="tabs"></div>
             </div>
 
+            <div class="catalog-progress">
+              <div>
+                <b id="catalogRange">Loading produce…</b>
+                <span id="catalogPageLabel"></span>
+              </div>
+              <div class="catalog-progress-track">
+                <span id="catalogProgressBar"></span>
+              </div>
+            </div>
+
             <div id="catalogState" class="catalog-state">Loading produce…</div>
             <div id="productList" class="product-list"></div>
+
+            <div class="catalog-pagination">
+              <button id="productPrevBtn" type="button">← Previous</button>
+              <div id="productPageDots" class="page-dots"></div>
+              <button id="productNextBtn" type="button">Next →</button>
+            </div>
 
             <div class="selection-summary">
               <div>
@@ -332,7 +375,35 @@
           <!-- Step 6 -->
           <section class="step-panel" data-step="5">
             <div class="step-heading">
-              <span>06 · CONSENT</span>
+              <span>06 · HARVEST PROFILE</span>
+              <h3>Your household harvest at a glance.</h3>
+              <p>This summary reflects the preferences you have shared for the Singapore launch.</p>
+            </div>
+
+            <div class="harvest-profile-hero">
+              <span>Your Harvest Profile</span>
+              <h4 id="profileTitle">A thoughtful weekly harvest</h4>
+              <p>
+                Our farm and launch teams will use this profile to plan produce volumes,
+                seasonal availability and delivery demand.
+              </p>
+            </div>
+
+            <div id="harvestProfileCard" class="harvest-profile-grid"></div>
+
+            <div class="profile-note">
+              <b>Planning note</b>
+              <p>
+                Estimated weight is indicative. Actual delivery will depend on your final order,
+                seasonal harvest and available produce.
+              </p>
+            </div>
+          </section>
+
+          <!-- Step 7 -->
+          <section class="step-panel" data-step="6">
+            <div class="step-heading">
+              <span>07 · CONSENT</span>
               <h3>One final step before you join.</h3>
               <p>Please review your choices and confirm how we may contact you.</p>
             </div>
@@ -416,6 +487,22 @@
     <span>© 2026 MyFarmBox</span>
   </div>
 </footer>
+
+
+<dialog id="resumeDialog" class="resume-dialog">
+  <div class="resume-icon">🌿</div>
+  <span class="eyebrow">Welcome back</span>
+  <h2>Continue your Harvest Journey?</h2>
+  <p id="resumeMessage">We found saved progress from your earlier visit.</p>
+  <div class="resume-progress">
+    <div><span id="resumePercent">0% complete</span><b id="resumeStepName">Your details</b></div>
+    <div class="journey-progress-track"><span id="resumeProgressBar"></span></div>
+  </div>
+  <div class="resume-actions">
+    <button id="resumeContinueBtn" type="button" class="primary-btn">Continue</button>
+    <button id="resumeRestartBtn" type="button" class="secondary-btn">Start again</button>
+  </div>
+</dialog>
 
 <dialog id="successDialog">
   <div class="success-mark">✓</div>
