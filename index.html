@@ -2,13 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>MyFarmBox Singapore</title>
-  <meta name="description" content="Fresh, traceable, 100% Natural Produce for Singapore families. Join the MyFarmBox Founding Harvest waitlist.">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>MyFarmBox Singapore · Founding Harvest</title>
+  <meta name="description" content="Join the MyFarmBox Singapore Founding Harvest. Fresh, traceable, 100% Natural Produce launching September 2026.">
   <meta name="theme-color" content="#173d34">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="">
+
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,14 +23,15 @@
   <div class="shell nav">
     <a class="brand" href="#top" aria-label="MyFarmBox Singapore home">
       <img src="assets/logo.png" alt="MyFarmBox logo" class="logo">
-      <span class="brand-copy"><b>MyFarmBox</b><small>Singapore</small></span>
+      <span class="brand-copy">
+        <b>MyFarmBox</b>
+        <small>Singapore</small>
+      </span>
     </a>
 
     <div class="header-contact">
       <span>Singapore support</span>
-      <a id="headerPhone" href="https://wa.me/65XXXXXXXX" target="_blank" rel="noopener">
-        +65 XXXX XXXX
-      </a>
+      <a id="headerPhone" href="#" target="_blank" rel="noopener">+65 XXXX XXXX</a>
     </div>
   </div>
 </header>
@@ -31,23 +39,30 @@
 <main id="top">
   <section class="hero shell">
     <div class="hero-copy">
-      <span class="eyebrow">Founding Harvest · Singapore</span>
-      <h1>Your weekly produce, thoughtfully planned.</h1>
+      <span class="eyebrow">MyFarmBox Singapore · Launching September 2026</span>
+      <h1>Fresh produce, planned around your family.</h1>
       <p>
-        Fresh, traceable, <strong>100% Natural Produce</strong>,
-        shaped around what your family actually cooks.
+        MyFarmBox is bringing fresh, traceable,
+        <strong>100% Natural Produce</strong> to Singapore.
+        Tell us what your family cooks, what produce you value and where you live.
+        Your preferences will help shape our first harvest, delivery areas and September launch.
       </p>
+
       <div class="hero-actions">
-        <a href="#waitlist" class="primary-btn">Join the founding waitlist</a>
-        <a id="heroWhatsApp" href="https://wa.me/65XXXXXXXX" class="text-link" target="_blank" rel="noopener">
+        <a href="#waitlist" class="primary-btn">Join the Founding Harvest</a>
+        <a id="heroWhatsApp" href="#" class="text-link" target="_blank" rel="noopener">
           Talk to our Singapore team
         </a>
       </div>
+
+      <p class="hero-assurance">No payment. No commitment. Just early access to our Singapore launch.</p>
     </div>
 
     <aside class="hero-note">
-      <span>Launching August 2026</span>
-      <p>Priority pilot access, early-member recognition, and first harvest invitations.</p>
+      <span>FOUNDING HARVEST</span>
+      <p>
+        Early families help us plan produce demand, launch delivery areas and the first pilot harvest.
+      </p>
     </aside>
   </section>
 
@@ -55,210 +70,321 @@
     <article>
       <span>01</span>
       <h3>Harvest-led</h3>
-      <p>Real household demand guides what we source and how much we plan.</p>
+      <p>Household demand helps guide what we source and how much we prepare.</p>
     </article>
     <article>
       <span>02</span>
       <h3>Traceable</h3>
-      <p>Trusted farm relationships and clear sourcing.</p>
+      <p>Clear sourcing and trusted relationships across the produce journey.</p>
     </article>
     <article>
       <span>03</span>
       <h3>Family-first</h3>
-      <p>Designed around everyday cooking, not generic grocery baskets.</p>
+      <p>Planned around everyday cooking rather than a generic grocery basket.</p>
     </article>
   </section>
 
-  <section id="waitlist" class="waitlist-section">
-    <div class="shell narrow">
+  <section id="waitlist" class="journey-section">
+    <div class="shell journey-shell">
       <header class="section-heading">
-        <span class="eyebrow">Founding Harvest Waitlist</span>
+        <span class="eyebrow">Founding Harvest Journey</span>
         <h2>Help us prepare what Singapore families genuinely need.</h2>
-        <p>No payment. No commitment. Just a thoughtful three-minute preference check.</p>
+        <p>A thoughtful preference check that takes about three minutes.</p>
       </header>
 
-      <form id="waitlistForm" novalidate>
-        <section class="form-block">
-          <div class="block-head">
-            <span>01</span>
-            <div>
-              <h3>Your household</h3>
-              <p>A few details to understand your weekly routine.</p>
+      <div class="journey-layout">
+        <aside class="journey-sidebar" aria-label="Form progress">
+          <div class="progress-ring" id="progressRing">
+            <span id="progressNumber">1</span>
+            <small>of 6</small>
+          </div>
+
+          <ol id="stepNav">
+            <li class="active"><button type="button" data-go="0"><span>01</span>Your details</button></li>
+            <li><button type="button" data-go="1"><span>02</span>Family routine</button></li>
+            <li><button type="button" data-go="2"><span>03</span>Select produce</button></li>
+            <li><button type="button" data-go="3"><span>04</span>Budget & values</button></li>
+            <li><button type="button" data-go="4"><span>05</span>Launch preference</button></li>
+            <li><button type="button" data-go="5"><span>06</span>Consent</button></li>
+          </ol>
+        </aside>
+
+        <form id="waitlistForm" novalidate>
+          <!-- Step 1 -->
+          <section class="step-panel active" data-step="0">
+            <div class="step-heading">
+              <span>01 · YOUR DETAILS</span>
+              <h3>First, tell us who and where you are.</h3>
+              <p>Your location helps us understand where the first Singapore delivery clusters should begin.</p>
             </div>
-          </div>
 
-          <div class="form-grid">
-            <label>Full name
-              <input name="name" autocomplete="name" required>
-            </label>
+            <div class="form-grid">
+              <label>Full name
+                <input name="name" autocomplete="name" required>
+              </label>
 
-            <label>Singapore mobile
-              <input name="phone" inputmode="tel" placeholder="+65 8123 4567" required>
-            </label>
+              <label>Singapore mobile
+                <input name="phone" inputmode="tel" autocomplete="tel" placeholder="+65 8123 4567" required>
+              </label>
 
-            <label>Email
-              <input name="email" type="email" autocomplete="email">
-            </label>
-
-            <label>Postal code
-              <input name="postalCode" inputmode="numeric" maxlength="6">
-            </label>
-
-            <label>Adults
-              <select name="adults" required>
-                <option value="">Choose</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4+</option>
-              </select>
-            </label>
-
-            <label>Children
-              <select name="children">
-                <option>0</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3+</option>
-              </select>
-            </label>
-
-            <label>Cooking rhythm
-              <select name="cookingFrequency" required>
-                <option value="">Choose</option>
-                <option>Daily</option>
-                <option>4–5 times a week</option>
-                <option>2–3 times a week</option>
-                <option>Weekends</option>
-                <option>Occasionally</option>
-              </select>
-            </label>
-
-            <label>Preferred delivery rhythm
-              <select name="deliveryFrequency">
-                <option>Weekly</option>
-                <option>Twice weekly</option>
-                <option>Fortnightly</option>
-                <option>Occasionally</option>
-              </select>
-            </label>
-          </div>
-        </section>
-
-        <section class="form-block">
-          <div class="block-head">
-            <span>02</span>
-            <div>
-              <h3>Select produce</h3>
-              <p>Choose directly from our live Master Products database.</p>
+              <label class="full">Email
+                <input name="email" type="email" autocomplete="email" required>
+              </label>
             </div>
-          </div>
 
-          <div class="catalog-toolbar">
-            <div class="search-wrap">
-              <span>⌕</span>
-              <input id="productSearch" placeholder="Search tomato, keerai, mango…">
+            <div class="map-block">
+              <div class="map-title">
+                <div>
+                  <h4>Select your location</h4>
+                  <p>Search, use your current location, tap the map or drag the pin.</p>
+                </div>
+                <button id="locateMeBtn" type="button" class="secondary-btn">Use my location</button>
+              </div>
+
+              <div class="location-search">
+                <input id="locationSearch" type="search" placeholder="Search Tampines, Punggol, postal code…">
+                <button id="searchLocationBtn" type="button">Search</button>
+              </div>
+
+              <div id="locationResults" class="location-results hidden"></div>
+              <div id="map" aria-label="Select Singapore delivery location"></div>
+
+              <div class="location-confirmation">
+                <div class="pin-dot"></div>
+                <div>
+                  <span>Selected location</span>
+                  <b id="selectedLocationText">Move the pin to confirm your location</b>
+                  <small id="selectedCoordinates"></small>
+                </div>
+              </div>
+
+              <input type="hidden" name="locationName">
+              <input type="hidden" name="locationAddress">
+              <input type="hidden" name="locationArea">
+              <input type="hidden" name="postalCode">
+              <input type="hidden" name="latitude">
+              <input type="hidden" name="longitude">
+              <input type="hidden" name="mapLink">
             </div>
-            <div id="categoryTabs" class="tabs"></div>
-          </div>
+          </section>
 
-          <div id="catalogState" class="catalog-state">Loading produce…</div>
-          <div id="productList" class="product-list"></div>
-
-          <div class="selection-summary">
-            <div>
-              <b id="selectedCount">0 selected</b>
-              <small id="estimatedKg">0 kg per week</small>
+          <!-- Step 2 -->
+          <section class="step-panel" data-step="1">
+            <div class="step-heading">
+              <span>02 · FAMILY ROUTINE</span>
+              <h3>How does your household cook and shop?</h3>
+              <p>This helps us estimate a practical weekly harvest for different family sizes.</p>
             </div>
-            <button type="button" id="clearSelection">Clear</button>
-          </div>
-        </section>
 
-        <section class="form-block">
-          <div class="block-head">
-            <span>03</span>
-            <div>
-              <h3>Budget and priorities</h3>
-              <p>Help us shape sensible launch packs and pricing.</p>
+            <div class="family-counter-grid">
+              <div class="counter-card">
+                <span>Adults</span>
+                <div class="counter">
+                  <button type="button" data-counter="adults" data-change="-1" aria-label="Remove adult">−</button>
+                  <strong id="adultsValue">2</strong>
+                  <button type="button" data-counter="adults" data-change="1" aria-label="Add adult">+</button>
+                </div>
+                <input type="hidden" name="adults" value="2">
+              </div>
+
+              <div class="counter-card">
+                <span>Children</span>
+                <div class="counter">
+                  <button type="button" data-counter="children" data-change="-1" aria-label="Remove child">−</button>
+                  <strong id="childrenValue">0</strong>
+                  <button type="button" data-counter="children" data-change="1" aria-label="Add child">+</button>
+                </div>
+                <input type="hidden" name="children" value="0">
+              </div>
             </div>
-          </div>
 
-          <p class="field-title">Expected weekly produce budget</p>
-          <div class="option-grid">
-            <label><input type="radio" name="weeklyBudget" value="Under S$30" required><span>Under S$30</span></label>
-            <label><input type="radio" name="weeklyBudget" value="S$30–S$50"><span>S$30–S$50</span></label>
-            <label><input type="radio" name="weeklyBudget" value="S$51–S$70"><span>S$51–S$70</span></label>
-            <label><input type="radio" name="weeklyBudget" value="Above S$70"><span>Above S$70</span></label>
-          </div>
-
-          <p class="field-title">What matters most?</p>
-          <div class="priority-grid">
-            <label><input type="checkbox" name="priorities" value="Freshness"><span>Freshness</span></label>
-            <label><input type="checkbox" name="priorities" value="Taste"><span>Taste</span></label>
-            <label><input type="checkbox" name="priorities" value="100% Natural Produce"><span>100% Natural Produce</span></label>
-            <label><input type="checkbox" name="priorities" value="Price"><span>Price</span></label>
-            <label><input type="checkbox" name="priorities" value="Indian varieties"><span>Indian varieties</span></label>
-            <label><input type="checkbox" name="priorities" value="Convenience"><span>Convenience</span></label>
-            <label><input type="checkbox" name="priorities" value="Traceability"><span>Traceability</span></label>
-          </div>
-        </section>
-
-        <section class="form-block">
-          <div class="block-head">
-            <span>04</span>
-            <div>
-              <h3>Launch preferences</h3>
-              <p>Choose how you would like us to stay in touch.</p>
+            <div class="choice-section">
+              <h4>Cooking rhythm</h4>
+              <p>How often is food cooked at home?</p>
+              <div class="large-options">
+                <label><input type="radio" name="cookingFrequency" value="Daily" required><span><b>Daily</b><small>Most meals are cooked at home</small></span></label>
+                <label><input type="radio" name="cookingFrequency" value="4–5 times a week"><span><b>4–5 times a week</b><small>A regular home-cooking routine</small></span></label>
+                <label><input type="radio" name="cookingFrequency" value="2–3 times a week"><span><b>2–3 times a week</b><small>A mix of home cooking and dining out</small></span></label>
+                <label><input type="radio" name="cookingFrequency" value="Weekends"><span><b>Mostly weekends</b><small>Home cooking is weekend-led</small></span></label>
+                <label><input type="radio" name="cookingFrequency" value="Occasionally"><span><b>Occasionally</b><small>Produce is needed in smaller quantities</small></span></label>
+              </div>
             </div>
-          </div>
 
-          <div class="preference-list">
-            <label>
-              <input type="checkbox" name="pilotInterest" checked>
-              <span>
-                <b>Invite me to the launch pilot</b>
-                <small>Priority invitation when the first limited harvest opens.</small>
-              </span>
+            <div class="choice-section">
+              <h4>Preferred delivery rhythm</h4>
+              <p>How regularly would fresh produce suit your household?</p>
+              <div class="compact-options">
+                <label><input type="radio" name="deliveryFrequency" value="Twice weekly" required><span>Twice weekly</span></label>
+                <label><input type="radio" name="deliveryFrequency" value="Weekly"><span>Weekly</span></label>
+                <label><input type="radio" name="deliveryFrequency" value="Fortnightly"><span>Fortnightly</span></label>
+                <label><input type="radio" name="deliveryFrequency" value="Occasionally"><span>Occasionally</span></label>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 3 -->
+          <section class="step-panel" data-step="2">
+            <div class="step-heading">
+              <span>03 · SELECT PRODUCE</span>
+              <h3>What would your family enjoy each week?</h3>
+              <p>Select produce and a typical weekly quantity. You can change this later.</p>
+            </div>
+
+            <div class="catalog-toolbar">
+              <div class="search-wrap">
+                <span>⌕</span>
+                <input id="productSearch" type="search" placeholder="Search tomato, keerai, mango…">
+              </div>
+              <div id="categoryTabs" class="tabs"></div>
+            </div>
+
+            <div id="catalogState" class="catalog-state">Loading produce…</div>
+            <div id="productList" class="product-list"></div>
+
+            <div class="selection-summary">
+              <div>
+                <b id="selectedCount">0 selected</b>
+                <small id="estimatedKg">0 kg per week</small>
+              </div>
+              <button type="button" id="clearSelection">Clear</button>
+            </div>
+          </section>
+
+          <!-- Step 4 -->
+          <section class="step-panel" data-step="3">
+            <div class="step-heading">
+              <span>04 · BUDGET & VALUES</span>
+              <h3>What feels comfortable and important?</h3>
+              <p>This helps us shape sensible launch packs, service levels and pricing.</p>
+            </div>
+
+            <div class="choice-section first">
+              <h4>Expected weekly produce budget</h4>
+              <div class="budget-options">
+                <label><input type="radio" name="weeklyBudget" value="Under S$30" required><span><b>Under S$30</b><small>Essential weekly top-up</small></span></label>
+                <label><input type="radio" name="weeklyBudget" value="S$30–S$50"><span><b>S$30–S$50</b><small>Balanced family produce</small></span></label>
+                <label><input type="radio" name="weeklyBudget" value="S$51–S$70"><span><b>S$51–S$70</b><small>Wider weekly variety</small></span></label>
+                <label><input type="radio" name="weeklyBudget" value="Above S$70"><span><b>Above S$70</b><small>Large household or premium range</small></span></label>
+              </div>
+            </div>
+
+            <div class="choice-section">
+              <div class="choice-title-row">
+                <div>
+                  <h4>What matters most?</h4>
+                  <p>Choose up to three priorities.</p>
+                </div>
+                <span id="priorityCount">0 of 3</span>
+              </div>
+
+              <div class="priority-grid">
+                <label><input type="checkbox" name="priorities" value="Freshness"><span>Freshness</span></label>
+                <label><input type="checkbox" name="priorities" value="Taste"><span>Taste</span></label>
+                <label><input type="checkbox" name="priorities" value="100% Natural Produce"><span>100% Natural Produce</span></label>
+                <label><input type="checkbox" name="priorities" value="Fair pricing"><span>Fair pricing</span></label>
+                <label><input type="checkbox" name="priorities" value="Indian varieties"><span>Indian varieties</span></label>
+                <label><input type="checkbox" name="priorities" value="Convenience"><span>Convenience</span></label>
+                <label><input type="checkbox" name="priorities" value="Traceability"><span>Traceability</span></label>
+                <label><input type="checkbox" name="priorities" value="Reliable delivery"><span>Reliable delivery</span></label>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 5 -->
+          <section class="step-panel" data-step="4">
+            <div class="step-heading">
+              <span>05 · LAUNCH PREFERENCE</span>
+              <h3>How would you like to participate?</h3>
+              <p>Choose only what is useful to you.</p>
+            </div>
+
+            <div class="preference-list">
+              <label>
+                <input type="checkbox" name="pilotInterest" checked>
+                <span>
+                  <b>Invite me to the September pilot</b>
+                  <small>Priority invitation when the first limited Singapore harvest opens.</small>
+                </span>
+              </label>
+
+              <label>
+                <input type="checkbox" name="callback">
+                <span>
+                  <b>I would appreciate a callback</b>
+                  <small>A Singapore team member can understand your household needs.</small>
+                </span>
+              </label>
+
+              <label>
+                <input type="checkbox" name="launchUpdates" checked>
+                <span>
+                  <b>Send me important launch updates</b>
+                  <small>Waitlist, pilot and harvest availability information only.</small>
+                </span>
+              </label>
+            </div>
+
+            <label class="notes-label">Anything specific you would love us to bring?
+              <textarea name="notes" rows="5" placeholder="Regional vegetables, favourite greens, delivery timing or anything else…"></textarea>
             </label>
+          </section>
 
-            <label>
-              <input type="checkbox" name="callback">
-              <span>
-                <b>I would appreciate a callback</b>
-                <small>A Singapore team member can understand your household needs.</small>
-              </span>
-            </label>
+          <!-- Step 6 -->
+          <section class="step-panel" data-step="5">
+            <div class="step-heading">
+              <span>06 · CONSENT</span>
+              <h3>One final step before you join.</h3>
+              <p>Please review your choices and confirm how we may contact you.</p>
+            </div>
 
-            <label>
-              <input type="checkbox" name="launchUpdates" checked>
-              <span>
-                <b>Keep me updated</b>
-                <small>Important waitlist and launch information only.</small>
-              </span>
-            </label>
+            <div id="reviewCard" class="review-card"></div>
+
+            <div class="consent-list">
+              <label>
+                <input type="checkbox" name="consent" required>
+                <span>
+                  <b>Launch and service consent</b>
+                  <small>
+                    I agree that MyFarmBox Singapore may use the information I have provided
+                    to contact me regarding the September 2026 launch, pilot participation,
+                    product availability and delivery planning.
+                  </small>
+                </span>
+              </label>
+
+              <label>
+                <input type="checkbox" name="marketingConsent">
+                <span>
+                  <b>Optional stories and updates</b>
+                  <small>
+                    I would also like to receive occasional MyFarmBox Singapore updates
+                    and harvest stories.
+                  </small>
+                </span>
+              </label>
+            </div>
+
+            <input name="website" class="honeypot" tabindex="-1" autocomplete="off">
+
+            <button id="submitBtn" class="submit-btn" type="submit">
+              Join the Founding Harvest
+            </button>
+
+            <p class="privacy-note">
+              No payment or purchase is required. Your details are used only for launch planning
+              and communication based on your choices above.
+            </p>
+          </section>
+
+          <div class="form-navigation">
+            <button id="backBtn" type="button" class="back-btn hidden">Back</button>
+            <p id="formMessage" class="form-message"></p>
+            <button id="nextBtn" type="button" class="next-btn">
+              Continue <span>→</span>
+            </button>
           </div>
-
-          <label>Anything specific you would love us to bring?
-            <textarea name="notes" rows="4"></textarea>
-          </label>
-
-          <label class="consent">
-            <input type="checkbox" name="consent" required>
-            <span>
-              I agree that MyFarmBox Singapore may contact me regarding the launch,
-              pilot and harvest availability.
-            </span>
-          </label>
-        </section>
-
-        <input name="website" class="honeypot" tabindex="-1" autocomplete="off">
-
-        <button id="submitBtn" class="submit-btn" type="submit">
-          Join as a Founding Harvest Member
-        </button>
-
-        <p id="formMessage" class="form-message"></p>
-      </form>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -271,9 +397,7 @@
 
       <div class="contact-card">
         <span>WhatsApp / Call</span>
-        <a id="contactPhone" href="https://wa.me/65XXXXXXXX" target="_blank" rel="noopener">
-          +65 XXXX XXXX
-        </a>
+        <a id="contactPhone" href="#" target="_blank" rel="noopener">+65 XXXX XXXX</a>
         <small>Available during Singapore business hours.</small>
       </div>
     </div>
@@ -284,7 +408,10 @@
   <div class="shell footer-inner">
     <div class="footer-brand">
       <img src="assets/logo.png" alt="MyFarmBox logo">
-      <div><b>MyFarmBox Singapore</b><span>Fresh. Traceable. Thoughtfully delivered.</span></div>
+      <div>
+        <b>MyFarmBox Singapore</b>
+        <span>Fresh. Traceable. Thoughtfully delivered.</span>
+      </div>
     </div>
     <span>© 2026 MyFarmBox</span>
   </div>
@@ -296,10 +423,14 @@
   <h2>Welcome to the Founding Harvest.</h2>
   <p>Your waitlist number</p>
   <strong id="waitlistId"></strong>
-  <p>We’ll keep you updated as we prepare for August 2026.</p>
-  <button id="doneBtn">Done</button>
+  <p>We’ll keep you updated as we prepare for the September 2026 Singapore launch.</p>
+  <button id="doneBtn" type="button">Done</button>
 </dialog>
 
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
 <script src="app.js"></script>
 </body>
 </html>
