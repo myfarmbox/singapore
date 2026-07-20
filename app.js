@@ -788,11 +788,12 @@ function collectDraftData() {
   const fields = {};
 
   for (const [key, value] of data.entries()) {
-    if (["priorities"].includes(key)) continue;
+    if (["priorities", "produceInterests"].includes(key)) continue;
     fields[key] = value;
   }
 
   fields.priorities = data.getAll("priorities");
+  fields.produceInterests = data.getAll("produceInterests");
   fields.pilotInterest = data.get("pilotInterest") === "on";
   fields.callback = data.get("callback") === "on";
   fields.launchUpdates = data.get("launchUpdates") === "on";
@@ -947,7 +948,7 @@ function restoreDraft(draft) {
   const fields = draft.fields || {};
 
   Object.entries(fields).forEach(([name, value]) => {
-    if (["priorities", "pilotInterest", "callback", "launchUpdates", "marketingConsent", "consent"].includes(name)) {
+    if (["priorities", "produceInterests", "pilotInterest", "callback", "launchUpdates", "marketingConsent", "consent"].includes(name)) {
       return;
     }
 
@@ -966,6 +967,11 @@ function restoreDraft(draft) {
   const priorities = Array.isArray(fields.priorities) ? fields.priorities : [];
   form.querySelectorAll('input[name="priorities"]').forEach(box => {
     box.checked = priorities.includes(box.value);
+  });
+
+  const produceInterests = Array.isArray(fields.produceInterests) ? fields.produceInterests : [];
+  form.querySelectorAll('input[name="produceInterests"]').forEach(box => {
+    box.checked = produceInterests.includes(box.value);
   });
 
   ["pilotInterest", "callback", "launchUpdates", "marketingConsent", "consent"].forEach(name => {
@@ -1429,4 +1435,299 @@ async function submitForm(event) {
     button.disabled = false;
     button.textContent = "Join the Founding Harvest";
   }
+}
+/* =========================================================
+   v5.0 Simple signup + optional weekly product explorer
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  initialiseBudgetSlider();
+
+  $("exploreProductsBtn").onclick = openProductExplorer;
+  $("doneBtn").onclick = finishInitialJourney;
+  $("closeExplorerBtn").onclick = () => $("productExplorerDialog").close();
+  $("saveProductPreferencesBtn").onclick = saveProductPreferences;
+  $("productSavedDoneBtn").onclick = () => {
+    $("productSavedDialog").close();
+    finishInitialJourney();
+  };
+});
+
+function initialiseBudgetSlider() {
+  const slider = $("weeklyBudget");
+  const display = $("weeklyBudgetValue");
+  if (!slider || !display) return;
+
+  const update = () => {
+    display.textContent = slider.value;
+  };
+
+  slider.addEventListener("input", () => {
+    update();
+    scheduleDraftSave();
+  });
+  slider.addEventListener("change", update);
+  update();
+}
+
+function formatWeeklyBudget(value) {
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0 ? `S$${amount} / week` : "Not selected";
+}
+
+function selectedProduceInterests(data = new FormData(form)) {
+  return data.getAll("produceInterests");
+}
+
+function validateStep(index, showMessage = true) {
+  const panel = document.querySelector(`.step-panel[data-step="${index}"]`);
+  const requiredFields = [...panel.querySelectorAll("[required]")];
+
+  for (const field of requiredFields) {
+    if (field.type === "checkbox" && field.name === "produceInterests") continue;
+    if (!field.checkValidity()) {
+      if (showMessage) {
+        field.reportValidity();
+        setMessage("Please complete the highlighted field.");
+      }
+      return false;
+    }
+  }
+
+  if (index === 0 && !state.locationConfirmed) {
+    if (showMessage) setMessage("Please select and confirm your location on the map.");
+    return false;
+  }
+
+  if (index === 2 && selectedProduceInterests().length === 0) {
+    if (showMessage) setMessage("Please choose at least one produce group.");
+    return false;
+  }
+
+  if (index === 3) {
+    const selectedPriorities = form.querySelectorAll('input[name="priorities"]:checked').length;
+    if (selectedPriorities === 0) {
+      if (showMessage) setMessage("Please choose at least one priority.");
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function renderHarvestProfile() {
+  const data = new FormData(form);
+  const adults = Number(data.get("adults") || 0);
+  const children = Number(data.get("children") || 0);
+  const interests = selectedProduceInterests(data);
+  const household = `${adults} adult${adults === 1 ? "" : "s"} · ${children} child${children === 1 ? "" : "ren"}`;
+
+  $("profileTitle").textContent =
+    interests.length === 3
+      ? "A complete family harvest"
+      : interests.length === 2
+        ? "A balanced family harvest"
+        : "A focused weekly harvest";
+
+  const cards = [
+    ["Family", household, `${adults + children} household member${adults + children === 1 ? "" : "s"}`],
+    ["Cooking", data.get("cookingFrequency") || "Not selected", "Your household kitchen rhythm"],
+    ["Produce", interests.join(", ") || "Not selected", "Broad weekly produce interests"],
+    ["Budget", formatWeeklyBudget(data.get("weeklyBudget")), "Expected weekly produce spend"],
+    ["Delivery", data.get("deliveryFrequency") || "Not selected", "Preferred harvest delivery rhythm"],
+    ["Launch", data.get("pilotInterest") === "on" ? "Pilot interested" : "Launch updates", "September 2026 Singapore journey"]
+  ];
+
+  $("harvestProfileCard").innerHTML = cards.map(([label, value, note]) =>
+    `<article class="profile-card"><span>${escapeHtml(label)}</span><b>${escapeHtml(value)}</b><small>${escapeHtml(note)}</small></article>`
+  ).join("");
+}
+
+function renderReview() {
+  const data = new FormData(form);
+  const interests = selectedProduceInterests(data);
+
+  $("reviewCard").innerHTML = `
+    ${reviewRow("Name", data.get("name") || "—")}
+    ${reviewRow("Location", data.get("locationName") || "—")}
+    ${reviewRow("Family", `${data.get("adults")} adult(s), ${data.get("children")} child(ren)`)}
+    ${reviewRow("Cooking", data.get("cookingFrequency") || "—")}
+    ${reviewRow("Delivery", data.get("deliveryFrequency") || "—")}
+    ${reviewRow("Produce interests", interests.join(", ") || "—")}
+    ${reviewRow("Weekly budget", formatWeeklyBudget(data.get("weeklyBudget")))}
+  `;
+}
+
+async function submitForm(event) {
+  event.preventDefault();
+  setMessage("");
+
+  if (!allPreviousStepsValid(TOTAL_STEPS - 1) || !form.reportValidity()) {
+    setMessage("Please review the incomplete section.");
+    return;
+  }
+
+  const button = $("submitBtn");
+  const data = new FormData(form);
+  const params = new URLSearchParams(location.search);
+
+  const payload = {
+    action: "joinWaitlist",
+    draftToken: state.draftToken,
+    name: data.get("name"),
+    phone: data.get("phone"),
+    email: data.get("email"),
+    postalCode: data.get("postalCode"),
+    locationName: data.get("locationName"),
+    locationAddress: data.get("locationAddress"),
+    locationArea: data.get("locationArea"),
+    latitude: data.get("latitude"),
+    longitude: data.get("longitude"),
+    mapLink: data.get("mapLink"),
+    adults: data.get("adults"),
+    children: data.get("children"),
+    cookingFrequency: data.get("cookingFrequency"),
+    deliveryFrequency: data.get("deliveryFrequency"),
+    weeklyBudget: Number(data.get("weeklyBudget") || 65),
+    produceInterests: selectedProduceInterests(data),
+    priorities: data.getAll("priorities"),
+    pilotInterest: data.get("pilotInterest") === "on",
+    callback: data.get("callback") === "on",
+    launchUpdates: data.get("launchUpdates") === "on",
+    consent: data.get("consent") === "on",
+    marketingConsent: data.get("marketingConsent") === "on",
+    notes: data.get("notes"),
+    website: data.get("website"),
+    source: params.get("utm_source") || "Singapore Website",
+    campaign: params.get("utm_campaign") || "SG Founding Harvest September 2026",
+    products: []
+  };
+
+  button.disabled = true;
+  button.textContent = "Joining…";
+
+  try {
+    const result = await apiPost(payload);
+    if (!result.ok) throw new Error(result.message || "Unable to submit.");
+
+    state.currentWaitlistId = result.waitlistId;
+    state.currentPreferenceToken = result.preferenceToken || "";
+    $("waitlistId").textContent = result.waitlistId;
+    await clearDraft(false);
+    localStorage.removeItem(DRAFT_TOKEN_KEY);
+    $("successDialog").showModal();
+  } catch (error) {
+    setMessage(error.message || "Something went wrong. Please try again.");
+    console.error(error);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Join the Founding Harvest";
+  }
+}
+
+function openProductExplorer() {
+  $("successDialog").close();
+  state.selected.clear();
+  state.productPage = 0;
+  state.category = "All";
+  state.search = "";
+  $("productSearch").value = "";
+  renderTabs(state.productCategories);
+  renderProducts();
+  updateSummary();
+  $("explorerMessage").textContent = "";
+  $("productExplorerDialog").showModal();
+}
+
+async function saveProductPreferences() {
+  const button = $("saveProductPreferencesBtn");
+  const message = $("explorerMessage");
+  message.textContent = "";
+
+  if (!state.currentWaitlistId) {
+    message.textContent = "Your waitlist reference is missing. Please submit the main form again.";
+    return;
+  }
+
+  if (state.selected.size === 0) {
+    message.textContent = "Please select at least one product and weekly quantity.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Saving…";
+
+  try {
+    const result = await apiPost({
+      action: "saveProductPreferences",
+      waitlistId: state.currentWaitlistId,
+      preferenceToken: state.currentPreferenceToken || "",
+      products: [...state.selected.values()]
+    });
+
+    if (!result.ok) throw new Error(result.message || "Unable to save product preferences.");
+
+    $("productExplorerDialog").close();
+    $("productSavedDialog").showModal();
+  } catch (error) {
+    message.textContent = error.message || "Unable to save. Please try again.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save Weekly Preferences";
+  }
+}
+
+function finishInitialJourney() {
+  if ($("successDialog").open) $("successDialog").close();
+
+  form.reset();
+  form.elements.adults.value = "2";
+  form.elements.children.value = "0";
+  form.elements.weeklyBudget.value = "65";
+  $("adultsValue").textContent = "2";
+  $("childrenValue").textContent = "0";
+  $("weeklyBudgetValue").textContent = "65";
+
+  state.selected.clear();
+  state.locationConfirmed = false;
+  state.productPage = 0;
+  state.category = "All";
+  state.search = "";
+  state.currentWaitlistId = "";
+  state.currentPreferenceToken = "";
+  state.draftToken = crypto.randomUUID
+    ? crypto.randomUUID()
+    : `draft-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  localStorage.setItem(DRAFT_TOKEN_KEY, state.draftToken);
+
+  renderTabs(state.productCategories);
+  renderProducts();
+  updateSummary();
+  showStep(0);
+  setSaveStatus("Auto-save on");
+}
+
+function renderTabs(categories) {
+  state.productCategories = categories;
+  const values = ["All", ...categories];
+  const labels = {
+    All: "All",
+    Veggie: "Everyday Essentials",
+    Fruits: "Seasonal",
+    Greens: "Greens"
+  };
+
+  $("categoryTabs").innerHTML = values.map(category =>
+    `<button type="button" class="${category === state.category ? "active" : ""}" data-category="${escapeHtml(category)}">${escapeHtml(labels[category] || category)}</button>`
+  ).join("");
+
+  $("categoryTabs").querySelectorAll("button").forEach(button => {
+    button.onclick = () => {
+      state.category = button.dataset.category;
+      state.productPage = 0;
+      renderTabs(categories);
+      renderProducts();
+      scheduleDraftSave();
+    };
+  });
 }

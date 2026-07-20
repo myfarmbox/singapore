@@ -833,3 +833,58 @@ dialog strong{
     min-height: 0;
   }
 }
+/* =========================================================
+   v5.0 Simple produce interests, budget slider and explorer
+   ========================================================= */
+.produce-interest-grid{display:grid;gap:12px}
+.produce-interest-card{position:relative;display:grid;grid-template-columns:48px minmax(0,1fr) 28px;align-items:center;gap:14px;padding:18px;border:1px solid var(--line);border-radius:18px;background:#fff;cursor:pointer;transition:.2s}
+.produce-interest-card:hover{border-color:rgba(34,139,34,.45);transform:translateY(-1px)}
+.produce-interest-card input{position:absolute;opacity:0;pointer-events:none}
+.produce-interest-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:var(--soft);font-size:23px}
+.produce-interest-copy b,.produce-interest-copy small{display:block}
+.produce-interest-copy b{font:700 17px "Manrope";color:var(--ink)}
+.produce-interest-copy small{margin-top:5px;color:var(--muted);font-weight:400;line-height:1.5}
+.produce-interest-check{display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--line);border-radius:50%;color:transparent;background:#fff}
+.produce-interest-card:has(input:checked){border-color:var(--forest);background:var(--forest-3)}
+.produce-interest-card input:checked~.produce-interest-check{border-color:var(--forest);background:var(--forest);color:#fff}
+.simple-note{margin-top:18px;margin-bottom:0}
+
+.budget-slider-card{padding:22px;border:1px solid rgba(34,139,34,.18);border-radius:20px;background:rgba(255,255,255,.82)}
+.budget-slider-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px}
+.budget-slider-heading h4{margin:0}
+.budget-slider-heading p{margin:5px 0 0;color:var(--muted);font-size:13px;font-weight:400}
+.budget-value{flex:0 0 auto;min-width:112px;padding:12px 14px;border-radius:16px;background:var(--forest);color:#fff;text-align:center}
+.budget-value span{font-size:15px;font-weight:700}
+.budget-value strong{display:inline;font-size:28px;line-height:1}
+.budget-value small{display:block;margin-top:4px;color:rgba(255,255,255,.72);font-size:10px}
+.budget-slider{width:100%;height:28px;margin:0;padding:0;border:0;background:transparent;cursor:pointer;accent-color:var(--forest)}
+.budget-slider::-webkit-slider-runnable-track{height:8px;border-radius:999px;background:#d8e5dc}
+.budget-slider::-webkit-slider-thumb{width:25px;height:25px;margin-top:-8px;border:4px solid #fff;border-radius:50%;background:var(--forest);box-shadow:0 3px 12px rgba(23,63,53,.28);-webkit-appearance:none}
+.budget-slider::-moz-range-track{height:8px;border-radius:999px;background:#d8e5dc}
+.budget-slider::-moz-range-thumb{width:18px;height:18px;border:4px solid #fff;border-radius:50%;background:var(--forest);box-shadow:0 3px 12px rgba(23,63,53,.28)}
+.budget-range{display:flex;justify-content:space-between;margin-top:7px;color:var(--muted);font-size:12px;font-weight:700}
+
+.success-dialog small{display:block;color:var(--muted);line-height:1.5}
+.success-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.success-actions button{width:100%}
+.success-actions .secondary-btn{background:#fff;color:var(--forest);border:1px solid var(--line);box-shadow:none}
+.product-explorer-dialog{width:min(760px,calc(100% - 24px));max-width:760px;max-height:90dvh;padding:24px;text-align:left;overflow:auto}
+.explorer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.explorer-head h2{margin:8px 0 7px;font-size:31px}
+.explorer-head p{margin:0;color:var(--muted);line-height:1.55}
+.dialog-close{flex:0 0 auto;width:42px;height:42px;padding:0;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink)}
+.explorer-toolbar{position:static;margin-top:22px;padding-bottom:5px}
+.explorer-summary{position:static;margin-bottom:16px}
+.explorer-actions{border-top:1px solid var(--line);padding-top:14px}
+.explorer-actions .submit-btn{margin-top:4px}
+#productSavedDialog{text-align:center}
+
+@media(max-width:580px){
+  .produce-interest-card{grid-template-columns:42px minmax(0,1fr) 25px;padding:14px;gap:11px}
+  .produce-interest-icon{width:42px;height:42px}
+  .budget-slider-heading{flex-direction:column}
+  .budget-value{width:100%}
+  .success-actions{grid-template-columns:1fr}
+  .product-explorer-dialog{width:calc(100% - 12px);max-height:94dvh;padding:16px;border-radius:20px}
+  .explorer-head h2{font-size:26px}
+}

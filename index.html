@@ -102,7 +102,7 @@
           <ol id="stepNav">
             <li class="active"><button type="button" data-go="0"><span>01</span>Your details</button></li>
             <li><button type="button" data-go="1"><span>02</span>Family routine</button></li>
-            <li><button type="button" data-go="2"><span>03</span>Select produce</button></li>
+            <li><button type="button" data-go="2"><span>03</span>Produce interests</button></li>
             <li><button type="button" data-go="3"><span>04</span>Budget & values</button></li>
             <li><button type="button" data-go="4"><span>05</span>Launch preference</button></li>
             <li><button type="button" data-go="5"><span>06</span>Harvest profile</button></li>
@@ -240,56 +240,49 @@
           <!-- Step 3 -->
           <section class="step-panel" data-step="2">
             <div class="step-heading">
-              <span>03 · SELECT PRODUCE</span>
-              <h3>What would your family enjoy each week?</h3>
-              <p>Select produce and a typical weekly quantity. You can change this later.</p>
+              <span>03 · PRODUCE INTERESTS</span>
+              <h3>What kind of fresh produce suits your home?</h3>
+              <p>Keep it simple for now. You can explore individual products and choose weekly quantities after joining.</p>
             </div>
 
-            <div class="seasonal-note">
+            <div class="produce-interest-grid">
+              <label class="produce-interest-card">
+                <input type="checkbox" name="produceInterests" value="Everyday Essentials" required>
+                <span class="produce-interest-icon">🥕</span>
+                <span class="produce-interest-copy">
+                  <b>Everyday Essentials</b>
+                  <small>Tomato, onion, potato, brinjal, ladies finger and regular cooking vegetables.</small>
+                </span>
+                <span class="produce-interest-check">✓</span>
+              </label>
+
+              <label class="produce-interest-card">
+                <input type="checkbox" name="produceInterests" value="Seasonal">
+                <span class="produce-interest-icon">🥭</span>
+                <span class="produce-interest-copy">
+                  <b>Seasonal</b>
+                  <small>Mangoes, papaya, gourds, beans and seasonal farm favourites.</small>
+                </span>
+                <span class="produce-interest-check">✓</span>
+              </label>
+
+              <label class="produce-interest-card">
+                <input type="checkbox" name="produceInterests" value="Greens">
+                <span class="produce-interest-icon">🥬</span>
+                <span class="produce-interest-copy">
+                  <b>Greens</b>
+                  <small>Spinach, amaranth, keerai varieties, coriander and other leafy greens.</small>
+                </span>
+                <span class="produce-interest-check">✓</span>
+              </label>
+            </div>
+
+            <div class="seasonal-note simple-note">
               <span class="seasonal-icon">🌱</span>
               <div>
-                <b>Seasonal harvest</b>
-                <p>
-                  Your selections guide our harvest planning. Produce will be harvested and
-                  delivered according to natural growing seasons, harvest readiness and farm availability,
-                  so every selected item may not be available every week.
-                </p>
+                <b>Explore detailed products later</b>
+                <p>After submitting, you can optionally choose individual products and the quantity your family may need every week.</p>
               </div>
-            </div>
-
-            <div class="catalog-toolbar">
-              <div class="search-wrap">
-                <span>⌕</span>
-                <input id="productSearch" type="search" placeholder="Search tomato, keerai, mango…">
-              </div>
-              <div id="categoryTabs" class="tabs"></div>
-            </div>
-
-            <div class="catalog-progress">
-              <div>
-                <b id="catalogRange">Loading produce…</b>
-                <span id="catalogPageLabel"></span>
-              </div>
-              <div class="catalog-progress-track">
-                <span id="catalogProgressBar"></span>
-              </div>
-            </div>
-
-            <div id="catalogState" class="catalog-state">Loading produce…</div>
-            <div id="productList" class="product-list"></div>
-
-            <div class="catalog-pagination">
-              <button id="productPrevBtn" type="button">← Previous</button>
-              <div id="productPageDots" class="page-dots"></div>
-              <button id="productNextBtn" type="button">Next →</button>
-            </div>
-
-            <div class="selection-summary">
-              <div>
-                <b id="selectedCount">0 selected</b>
-                <small id="estimatedKg">0 kg per week</small>
-              </div>
-              <button type="button" id="clearSelection">Clear</button>
             </div>
           </section>
 
@@ -302,12 +295,16 @@
             </div>
 
             <div class="choice-section first">
-              <h4>Expected weekly produce budget</h4>
-              <div class="budget-options">
-                <label><input type="radio" name="weeklyBudget" value="Under S$30" required><span><b>Under S$30</b><small>Essential weekly top-up</small></span></label>
-                <label><input type="radio" name="weeklyBudget" value="S$30–S$50"><span><b>S$30–S$50</b><small>Balanced family produce</small></span></label>
-                <label><input type="radio" name="weeklyBudget" value="S$51–S$70"><span><b>S$51–S$70</b><small>Wider weekly variety</small></span></label>
-                <label><input type="radio" name="weeklyBudget" value="Above S$70"><span><b>Above S$70</b><small>Large household or premium range</small></span></label>
+              <div class="budget-slider-card">
+                <div class="budget-slider-heading">
+                  <div>
+                    <h4>Expected weekly produce budget</h4>
+                    <p>Choose an amount that feels comfortable for your household.</p>
+                  </div>
+                  <div class="budget-value"><span>S$</span><strong id="weeklyBudgetValue">65</strong><small>/ week</small></div>
+                </div>
+                <input id="weeklyBudget" class="budget-slider" type="range" name="weeklyBudget" min="35" max="120" step="5" value="65" required>
+                <div class="budget-range"><span>S$35</span><span>S$120</span></div>
               </div>
             </div>
 
@@ -504,14 +501,69 @@
   </div>
 </dialog>
 
-<dialog id="successDialog">
+<dialog id="successDialog" class="success-dialog">
   <div class="success-mark">✓</div>
   <span class="eyebrow">You’re on the list</span>
   <h2>Welcome to the Founding Harvest.</h2>
   <p>Your waitlist number</p>
   <strong id="waitlistId"></strong>
-  <p>We’ll keep you updated as we prepare for the September 2026 Singapore launch.</p>
-  <button id="doneBtn" type="button">Done</button>
+  <p>Would you like to explore our produce and select the quantities your family may need each week?</p>
+  <small>This is optional and helps us plan the first Singapore harvest more accurately.</small>
+  <div class="success-actions">
+    <button id="exploreProductsBtn" type="button">Explore Products</button>
+    <button id="doneBtn" type="button" class="secondary-btn">Maybe Later</button>
+  </div>
+</dialog>
+
+<dialog id="productExplorerDialog" class="product-explorer-dialog">
+  <div class="explorer-head">
+    <div>
+      <span class="eyebrow">Weekly Harvest Preferences</span>
+      <h2>Select products and quantities</h2>
+      <p>Choose only what your family may need in a typical week. You can update this later.</p>
+    </div>
+    <button id="closeExplorerBtn" type="button" class="dialog-close" aria-label="Close product explorer">✕</button>
+  </div>
+
+  <div class="catalog-toolbar explorer-toolbar">
+    <div class="search-wrap">
+      <span>⌕</span>
+      <input id="productSearch" type="search" placeholder="Search tomato, keerai, mango…">
+    </div>
+    <div id="categoryTabs" class="tabs"></div>
+  </div>
+
+  <div class="catalog-progress">
+    <div><b id="catalogRange">Loading produce…</b><span id="catalogPageLabel"></span></div>
+    <div class="catalog-progress-track"><span id="catalogProgressBar"></span></div>
+  </div>
+
+  <div id="catalogState" class="catalog-state">Loading produce…</div>
+  <div id="productList" class="product-list"></div>
+
+  <div class="catalog-pagination">
+    <button id="productPrevBtn" type="button">← Previous</button>
+    <div id="productPageDots" class="page-dots"></div>
+    <button id="productNextBtn" type="button">Next →</button>
+  </div>
+
+  <div class="selection-summary explorer-summary">
+    <div><b id="selectedCount">0 selected</b><small id="estimatedKg">0 kg per week</small></div>
+    <button type="button" id="clearSelection">Clear</button>
+  </div>
+
+  <div class="explorer-actions">
+    <p id="explorerMessage" class="form-message"></p>
+    <button id="saveProductPreferencesBtn" type="button" class="submit-btn">Save Weekly Preferences</button>
+  </div>
+</dialog>
+
+<dialog id="productSavedDialog" class="success-dialog">
+  <div class="success-mark">✓</div>
+  <span class="eyebrow">Preferences saved</span>
+  <h2>Thank you for helping us plan.</h2>
+  <p>Your selected products and weekly quantities are now connected to your Founding Harvest profile.</p>
+  <button id="productSavedDoneBtn" type="button">Done</button>
 </dialog>
 
 <script
