@@ -1,9 +1,11 @@
-const API_URL = "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
+const CONFIG = {
+  API_URL: "https://script.google.com/macros/s/AKfycbyjQEITL5yb5URDIM3lYtjprZNy0YEpqmEuFNlidbjDdVNoQCuDvGsbau4WzMRUu4Oonw/exec",
+  SINGAPORE_PHONE_DISPLAY: "+65 XXXX XXXX",
+  SINGAPORE_PHONE_KEY: "65XXXXXXXX"
+};
 
 const state = {
-  step: 1,
   products: [],
-  filtered: [],
   selected: new Map(),
   category: "All",
   search: ""
@@ -13,45 +15,61 @@ const $ = id => document.getElementById(id);
 const form = $("waitlistForm");
 
 document.addEventListener("DOMContentLoaded", () => {
-  $("nextBtn").onclick = nextStep;
-  $("backBtn").onclick = previousStep;
+  applyContactDetails();
   $("productSearch").oninput = event => {
     state.search = event.target.value.trim().toLowerCase();
     renderProducts();
   };
-  $("reviewSelection").onclick = openSelection;
-  $("closeSelection").onclick = () => $("selectionDrawer").classList.add("hidden");
+  $("clearSelection").onclick = () => {
+    state.selected.clear();
+    renderProducts();
+    updateSummary();
+  };
   $("doneBtn").onclick = () => $("successDialog").close();
   form.onsubmit = submitForm;
   loadProducts();
-  updateStep();
 });
 
-async function loadProducts() {
-  if (!API_URL || API_URL.includes("PASTE_YOUR")) {
-    $("catalogState").textContent = "Add the Apps Script /exec URL in app.js to load products.";
-    return;
-  }
+function applyContactDetails() {
+  const waUrl = `https://wa.me/${CONFIG.SINGAPORE_PHONE_KEY}`;
+  ["headerPhone", "heroWhatsApp", "contactPhone"].forEach(id => {
+    const element = $(id);
+    if (!element) return;
+    element.href = waUrl;
+  });
 
+  $("headerPhone").textContent = CONFIG.SINGAPORE_PHONE_DISPLAY;
+  $("contactPhone").textContent = CONFIG.SINGAPORE_PHONE_DISPLAY;
+}
+
+async function loadProducts() {
   try {
-    const response = await fetch(`${API_URL}?action=products`);
+    const response = await fetch(`${CONFIG.API_URL}?action=products`);
     const result = await response.json();
 
-    if (!result.ok) throw new Error(result.message || "Unable to load products.");
+    if (!result.ok) {
+      throw new Error(result.message || "Unable to load produce.");
+    }
 
     state.products = result.products || [];
     renderTabs(result.categories || ["Veggie", "Fruits", "Greens"]);
     renderProducts();
   } catch (error) {
-    $("catalogState").innerHTML =
-      `Products could not be loaded. <button type="button" onclick="loadProducts()">Try again</button>`;
+    $("catalogState").textContent =
+      "Produce could not be loaded. Please refresh the page.";
+    console.error(error);
   }
 }
 
 function renderTabs(categories) {
   const values = ["All", ...categories];
+
   $("categoryTabs").innerHTML = values.map(category =>
-    `<button type="button" class="${category === state.category ? "active" : ""}" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`
+    `<button
+      type="button"
+      class="${category === state.category ? "active" : ""}"
+      data-category="${escapeHtml(category)}"
+    >${escapeHtml(category)}</button>`
   ).join("");
 
   $("categoryTabs").querySelectorAll("button").forEach(button => {
@@ -64,7 +82,7 @@ function renderTabs(categories) {
 }
 
 function renderProducts() {
-  state.filtered = state.products.filter(product => {
+  const list = state.products.filter(product => {
     const categoryMatch =
       state.category === "All" ||
       product.category === state.category;
@@ -77,43 +95,50 @@ function renderProducts() {
       (!state.search || haystack.includes(state.search));
   });
 
-  $("catalogState").classList.toggle("hidden", state.filtered.length > 0);
+  $("catalogState").classList.toggle("hidden", list.length > 0);
   $("catalogState").textContent =
     state.products.length
       ? "No produce matches this search."
-      : "Loading fresh produce…";
+      : "Loading produce…";
 
-  $("productGrid").innerHTML = state.filtered.map(product => {
-    const item = state.selected.get(product.id);
-    const quantities = product.quantities || [];
+  $("productList").innerHTML = list.map(product => {
+    const chosen = state.selected.get(product.id);
 
-    return `<article class="product-card ${item ? "selected" : ""}" data-id="${escapeHtml(product.id)}">
-      <div class="product-image">
+    return `<article class="product-row ${chosen ? "selected" : ""}" data-id="${escapeHtml(product.id)}">
+      <div class="product-thumb">
         ${product.imageUrl
           ? `<img src="${escapeAttribute(product.imageUrl)}" alt="${escapeAttribute(product.name)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;fallback&quot;>MFB</div>'">`
           : '<div class="fallback">MFB</div>'}
-        <span class="product-check">✓</span>
       </div>
-      <div class="product-info">
+
+      <div class="product-copy">
         <b>${escapeHtml(product.name)}</b>
         <small>${escapeHtml(product.tanglish || product.category)}</small>
-        <select aria-label="${escapeAttribute(product.name)} quantity">
-          ${quantities.map(option =>
-            `<option value="${escapeAttribute(option.label)}" data-kg="${Number(option.estimatedKg || 0)}" ${item && item.weeklyQuantity === option.label ? "selected" : ""}>${escapeHtml(option.label)}</option>`
-          ).join("")}
-        </select>
       </div>
+
+      <div class="product-toggle">${chosen ? "✓" : "+"}</div>
+
+      <select aria-label="${escapeAttribute(product.name)} quantity">
+        ${(product.quantities || []).map(option =>
+          `<option
+            value="${escapeAttribute(option.label)}"
+            data-kg="${Number(option.estimatedKg || 0)}"
+            ${chosen && chosen.weeklyQuantity === option.label ? "selected" : ""}
+          >${escapeHtml(option.label)}</option>`
+        ).join("")}
+      </select>
     </article>`;
   }).join("");
 
-  $("productGrid").querySelectorAll(".product-card").forEach(card => {
-    card.onclick = event => {
+  $("productList").querySelectorAll(".product-row").forEach(row => {
+    row.onclick = event => {
       if (event.target.tagName === "SELECT") return;
-      toggleProduct(card.dataset.id);
+      toggleProduct(row.dataset.id);
     };
 
-    const select = card.querySelector("select");
-    select.onchange = event => updateQuantity(card.dataset.id, event.target);
+    const select = row.querySelector("select");
+    select.onchange = event =>
+      updateQuantity(row.dataset.id, event.target);
   });
 }
 
@@ -125,6 +150,7 @@ function toggleProduct(id) {
     state.selected.delete(id);
   } else {
     const quantity = product.quantities[0];
+
     state.selected.set(id, {
       productId: product.id,
       productName: product.name,
@@ -136,7 +162,7 @@ function toggleProduct(id) {
   }
 
   renderProducts();
-  updateSelection();
+  updateSummary();
 }
 
 function updateQuantity(id, select) {
@@ -144,100 +170,44 @@ function updateQuantity(id, select) {
   if (!item) return;
 
   const option = select.options[select.selectedIndex];
+
   item.weeklyQuantity = option.value;
   item.estimatedKg = Number(option.dataset.kg || 0);
+
   state.selected.set(id, item);
-  updateSelection();
+  updateSummary();
 }
 
-function updateSelection() {
+function updateSummary() {
   const items = [...state.selected.values()];
-  const kg = items.reduce(
-    (total, item) => total + Number(item.estimatedKg || 0),
+  const totalKg = items.reduce(
+    (sum, item) => sum + Number(item.estimatedKg || 0),
     0
   );
 
   $("selectedCount").textContent =
     `${items.length} selected`;
+
   $("estimatedKg").textContent =
-    `${formatNumber(kg)} kg per week`;
-
-  $("selectedList").innerHTML = items.length
-    ? items.map(item => `<div class="selected-row"><div><b>${escapeHtml(item.productName)}</b><small>${escapeHtml(item.category)}</small></div><span>${escapeHtml(item.weeklyQuantity)}</span></div>`).join("")
-    : '<p>No products selected yet.</p>';
-}
-
-function openSelection() {
-  updateSelection();
-  $("selectionDrawer").classList.remove("hidden");
-}
-
-function nextStep() {
-  if (!validateCurrentStep()) return;
-  state.step = Math.min(4, state.step + 1);
-  updateStep();
-}
-
-function previousStep() {
-  state.step = Math.max(1, state.step - 1);
-  updateStep();
-}
-
-function validateCurrentStep() {
-  $("formMessage").textContent = "";
-
-  if (state.step === 1) {
-    const fields = [...document.querySelector('[data-step="1"]').querySelectorAll("[required]")];
-    for (const field of fields) {
-      if (!field.checkValidity()) {
-        field.reportValidity();
-        return false;
-      }
-    }
-  }
-
-  if (state.step === 2 && state.selected.size === 0) {
-    $("formMessage").textContent =
-      "Please select at least one product.";
-    return false;
-  }
-
-  if (state.step === 3) {
-    const budget = form.querySelector('[name="weeklyBudget"]:checked');
-    if (!budget) {
-      $("formMessage").textContent =
-        "Please select an expected weekly budget.";
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function updateStep() {
-  document.querySelectorAll(".step").forEach(section => {
-    section.classList.toggle(
-      "active",
-      Number(section.dataset.step) === state.step
-    );
-  });
-
-  $("progress").style.width = `${state.step * 25}%`;
-  $("backBtn").classList.toggle("hidden", state.step === 1);
-  $("nextBtn").classList.toggle("hidden", state.step === 4);
-  $("submitBtn").classList.toggle("hidden", state.step !== 4);
-  $("formMessage").textContent = "";
-  document.querySelector(".journey").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
+    `${formatNumber(totalKg)} kg per week`;
 }
 
 async function submitForm(event) {
   event.preventDefault();
 
-  if (!validateCurrentStep()) return;
+  $("formMessage").textContent = "";
+
   if (!form.reportValidity()) return;
+
+  if (state.selected.size === 0) {
+    $("formMessage").textContent =
+      "Please select at least one product.";
+    $("productList").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+    return;
+  }
 
   const button = $("submitBtn");
   const data = new FormData(form);
@@ -261,22 +231,21 @@ async function submitForm(event) {
     consent: data.get("consent") === "on",
     notes: data.get("notes"),
     website: data.get("website"),
-    source: params.get("utm_source") || "Direct",
+    source: params.get("utm_source") || "Singapore Website",
     campaign: params.get("utm_campaign") || "SG Founding Harvest",
     products: [...state.selected.values()]
   };
 
   button.disabled = true;
   button.textContent = "Joining…";
-  $("formMessage").textContent = "";
 
   try {
     const body = new URLSearchParams();
     body.set("payload", JSON.stringify(payload));
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(CONFIG.API_URL, {
       method: "POST",
-      body: body
+      body
     });
 
     const result = await response.json();
@@ -290,16 +259,15 @@ async function submitForm(event) {
 
     form.reset();
     state.selected.clear();
-    state.step = 1;
     renderProducts();
-    updateSelection();
-    updateStep();
+    updateSummary();
   } catch (error) {
     $("formMessage").textContent =
       error.message || "Something went wrong. Please try again.";
+    console.error(error);
   } finally {
     button.disabled = false;
-    button.textContent = "Join the waitlist";
+    button.textContent = "Join as a Founding Harvest Member";
   }
 }
 
