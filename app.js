@@ -2253,3 +2253,179 @@ async function saveProductPreferences() {
     button.textContent = "Save My Weekly Harvest";
   }
 }
+
+/* =========================================================
+   v5.9 Premium Harvest Cards — final behaviour override
+   ========================================================= */
+const PRODUCT_ENGLISH_NAMES = {
+  "inji":"Ginger","ginger":"Ginger",
+  "urulaikizhangu":"Potato","urulai kizhangu":"Potato","potato":"Potato",
+  "kathiri":"Brinjal","kathirikkai":"Brinjal","brinjal":"Brinjal","eggplant":"Brinjal",
+  "thakkali":"Tomato","thakkali":"Tomato","tomato":"Tomato",
+  "vengayam":"Onion","onion":"Onion","sambar vengayam":"Shallots","chinna vengayam":"Shallots",
+  "vendakkai":"Okra","ladies finger":"Okra","lady finger":"Okra","okra":"Okra",
+  "murungakkai":"Drumstick","drumstick":"Drumstick",
+  "murungai keerai":"Moringa Leaves","moringa":"Moringa Leaves",
+  "pachai milagai":"Green Chilli","milagai":"Chilli","green chilli":"Green Chilli",
+  "poondu":"Garlic","garlic":"Garlic",
+  "carrot":"Carrot","kerat":"Carrot",
+  "beans":"Beans","french beans":"Beans","avarakkai":"Broad Beans","kothavarangai":"Cluster Beans",
+  "vellarikai":"Cucumber","cucumber":"Cucumber",
+  "muttai kos":"Cabbage","cabbage":"Cabbage",
+  "cauliflower":"Cauliflower","cauli flower":"Cauliflower",
+  "broccoli":"Broccoli",
+  "beetroot":"Beetroot","beet root":"Beetroot",
+  "radish":"Radish","mullangi":"Radish",
+  "pudalanga":"Snake Gourd","snake gourd":"Snake Gourd",
+  "peerkangai":"Ridge Gourd","ridge gourd":"Ridge Gourd",
+  "suraikkai":"Bottle Gourd","bottle gourd":"Bottle Gourd",
+  "pavakkai":"Bitter Gourd","bitter gourd":"Bitter Gourd",
+  "poosanikai":"Ash Gourd","ash gourd":"Ash Gourd","pumpkin":"Pumpkin","parangikai":"Pumpkin",
+  "kovakkai":"Ivy Gourd","ivy gourd":"Ivy Gourd",
+  "vazhaikkai":"Plantain","raw banana":"Plantain","plantain":"Plantain",
+  "senai kizhangu":"Elephant Yam","elephant yam":"Elephant Yam","yam":"Yam",
+  "sakkaravalli kizhangu":"Sweet Potato","sweet potato":"Sweet Potato",
+  "kothamalli":"Coriander","coriander":"Coriander",
+  "karuveppilai":"Curry Leaves","curry leaves":"Curry Leaves",
+  "pudina":"Mint","mint":"Mint",
+  "pasalai keerai":"Spinach","spinach":"Spinach",
+  "arai keerai":"Amaranth","sirukeerai":"Amaranth","mula keerai":"Amaranth",
+  "ponnanganni keerai":"Ponnanganni","ponnanganni":"Ponnanganni",
+  "agathi keerai":"Agathi Leaves","agathi":"Agathi Leaves",
+  "manga":"Mango","mango":"Mango",
+  "papali":"Papaya","papaya":"Papaya",
+  "vazhaipazham":"Banana","banana":"Banana",
+  "apple":"Apple","orange":"Orange","lemon":"Lemon","elumichai":"Lemon",
+  "watermelon":"Watermelon","pineapple":"Pineapple","dragon fruit":"Dragon Fruit",
+  "thengai":"Coconut","coconut":"Coconut"
+};
+
+function normaliseProductTerm(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[–—-]/g, " ")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function premiumProductName(product) {
+  const candidates = [product.tanglish, product.name];
+  for (const candidate of candidates) {
+    const term = normaliseProductTerm(candidate);
+    if (!term) continue;
+    if (PRODUCT_ENGLISH_NAMES[term]) return PRODUCT_ENGLISH_NAMES[term];
+    const exactKey = Object.keys(PRODUCT_ENGLISH_NAMES).find(key => term === key || term.includes(key));
+    if (exactKey) return PRODUCT_ENGLISH_NAMES[exactKey];
+  }
+  const fallback = String(product.tanglish || product.name || "Fresh Produce")
+    .replace(/[–—-].*$/, "")
+    .trim();
+  return fallback.replace(/\b\w/g, letter => letter.toUpperCase());
+}
+
+function premiumSecondaryName(product) {
+  const raw = String(product.tanglish || "").trim();
+  const english = premiumProductName(product).toLowerCase();
+  if (raw && raw.toLowerCase() !== english) return raw;
+  const original = String(product.name || "").trim();
+  return original && original.toLowerCase() !== english ? original : "Fresh produce";
+}
+
+function premiumCategoryName(category) {
+  return ({Veggie:"Everyday Essentials",Fruits:"Seasonal Fruits",Greens:"Fresh Greens"})[category] || category || "Fresh Produce";
+}
+
+function renderProducts() {
+  const all = getFilteredProducts();
+  const pending = getPendingProducts();
+  const list = $("productList");
+  if (!list) return;
+
+  $("catalogState").classList.toggle("hidden", pending.length > 0 || all.length === 0);
+  $("catalogState").textContent = state.products.length
+    ? "No matching products left to review."
+    : "Loading produce…";
+
+  if (!pending.length && all.length) {
+    list.innerHTML = `<div class="harvest-done-state"><span>🌿</span><h3>You’ve reviewed this harvest.</h3><p>Open your basket to review selected products, or choose another category.</p></div>`;
+  } else {
+    list.innerHTML = pending.slice(0, state.listBatchSize).map(product => {
+      const quantities = product.quantities || [];
+      const displayName = premiumProductName(product);
+      const secondaryName = premiumSecondaryName(product);
+      return `<article class="harvest-list-item" data-id="${escapeAttribute(product.id)}">
+        <div class="harvest-card-top">
+          <div class="harvest-list-icon">
+            ${product.imageUrl
+              ? `<img src="${escapeAttribute(product.imageUrl)}" alt="${escapeAttribute(displayName)}" loading="lazy" onerror="this.outerHTML='<span>${productIconFallback(product)}</span>'">`
+              : `<span>${productIconFallback(product)}</span>`}
+          </div>
+          <div class="harvest-list-copy">
+            <b title="${escapeAttribute(displayName)}">${escapeHtml(displayName)}</b>
+            <small title="${escapeAttribute(secondaryName)}">${escapeHtml(secondaryName)}</small>
+            <span class="product-category-chip">${escapeHtml(premiumCategoryName(product.category))}</span>
+          </div>
+        </div>
+        <span class="quantity-label">Weekly quantity</span>
+        <div class="harvest-list-actions">
+          <select aria-label="Weekly quantity for ${escapeAttribute(displayName)}">
+            ${quantities.length
+              ? quantities.map(option => `<option value="${escapeAttribute(option.label)}" data-kg="${Number(option.estimatedKg || 0)}">${escapeHtml(option.label)}</option>`).join("")
+              : `<option value="1 unit" data-kg="0">1 unit</option>`}
+          </select>
+          <button type="button" class="harvest-action add" data-action="add">Add to Harvest</button>
+          <button type="button" class="harvest-action later" data-action="later">Maybe Later</button>
+          <button type="button" class="harvest-action no" data-action="no">Don’t Need</button>
+        </div>
+      </article>`;
+    }).join("");
+
+    list.querySelectorAll(".harvest-list-item").forEach(row => {
+      row.querySelectorAll("[data-action]").forEach(button => {
+        button.onclick = () => reviewProduct(row.dataset.id, button.dataset.action, row);
+      });
+    });
+  }
+
+  updateReviewStats();
+}
+
+function updateSummary() {
+  const items = [...state.selected.values()];
+  const totalKg = items.reduce((sum, item) => sum + Number(item.estimatedKg || 0), 0);
+  $("selectedCount").textContent = `${items.length} product${items.length === 1 ? "" : "s"}`;
+  $("estimatedKg").textContent = items.length ? `${formatNumber(totalKg)} kg per week` : "Your basket is empty";
+  if ($("basketTotalKg")) $("basketTotalKg").textContent = `${formatNumber(totalKg)} kg`;
+  renderBasketItems();
+  updateReviewStats();
+}
+
+function renderBasketItems() {
+  const holder = $("basketItems");
+  if (!holder) return;
+  const items = [...state.selected.values()];
+  if (!items.length) {
+    holder.innerHTML = '<div class="basket-empty">Your basket is ready for your first product.</div>';
+    return;
+  }
+  holder.innerHTML = items.map(item => {
+    const product = state.products.find(productItem => productItem.id === item.productId) || {name:item.productName};
+    const displayName = premiumProductName(product);
+    return `<article class="basket-item">
+      <div class="basket-item-thumb">${product.imageUrl ? `<img src="${escapeAttribute(product.imageUrl)}" alt="${escapeAttribute(displayName)}" onerror="this.outerHTML='${productIconFallback(product)}'">` : productIconFallback(product)}</div>
+      <div><b>${escapeHtml(displayName)}</b><small>${escapeHtml(item.weeklyQuantity)}</small></div>
+      <button type="button" class="basket-remove" data-remove="${escapeAttribute(item.productId)}" aria-label="Remove ${escapeAttribute(displayName)}">−</button>
+    </article>`;
+  }).join("");
+  holder.querySelectorAll("[data-remove]").forEach(button => {
+    button.onclick = () => {
+      const id = button.dataset.remove;
+      state.selected.delete(id);
+      state.reviewedProducts.delete(id);
+      updateSummary();
+      renderProducts();
+      scheduleDraftSave();
+    };
+  });
+}
