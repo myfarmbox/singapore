@@ -515,17 +515,17 @@
   </div>
 </dialog>
 
-<dialog id="productExplorerDialog" class="product-explorer-dialog harvest-cloud-dialog">
-  <div class="explorer-head harvest-cloud-head">
+<dialog id="productExplorerDialog" class="product-explorer-dialog harvest-list-dialog">
+  <div class="explorer-head">
     <div>
       <span class="eyebrow">Build Your Weekly Harvest</span>
-      <h2>Tap what your family enjoys.</h2>
-      <p>Open a product, choose a weekly quantity and watch your basket grow.</p>
+      <h2>Choose what your family needs.</h2>
+      <p>Select a weekly quantity, add it to your harvest, or mark it for later.</p>
     </div>
     <button id="closeExplorerBtn" type="button" class="dialog-close" aria-label="Close product explorer">✕</button>
   </div>
 
-  <div class="catalog-toolbar explorer-toolbar harvest-toolbar">
+  <div class="catalog-toolbar explorer-toolbar harvest-list-toolbar">
     <div class="search-wrap">
       <span>⌕</span>
       <input id="productSearch" type="search" placeholder="Search tomato, spinach, mango…">
@@ -533,37 +533,33 @@
     <div id="categoryTabs" class="tabs"></div>
   </div>
 
-  <div class="harvest-cloud-status">
-    <div>
-      <span>HARVEST CLOUD</span>
-      <b id="catalogRange">Loading produce…</b>
+  <section class="harvest-review-summary" aria-live="polite">
+    <div class="review-progress-copy">
+      <div><span>REVIEWED</span><b id="reviewedCount">0 / 0</b></div>
+      <div><span>SELECTED</span><b id="selectedStat">0</b></div>
+      <div><span>MAYBE LATER</span><b id="skippedStat">0</b></div>
+      <div><span>DON'T NEED</span><b id="notNeededStat">0</b></div>
     </div>
-    <small id="catalogPageLabel">Tap a product to open it</small>
-  </div>
-
-  <div id="catalogState" class="catalog-state">Loading produce…</div>
-
-  <section id="harvestCloud" class="harvest-cloud" aria-label="Weekly produce selection">
-    <div id="productList" class="product-list harvest-cloud-products"></div>
-    <div class="cloud-hint" aria-hidden="true">Drag your gaze around the harvest</div>
+    <div class="review-progress-track"><span id="reviewProgressBar"></span></div>
   </section>
 
-  <div id="productFocusCard" class="product-focus-card hidden" aria-live="polite"></div>
+  <div id="catalogState" class="catalog-state">Loading produce…</div>
+  <div id="productList" class="harvest-product-list" aria-label="Weekly produce selection"></div>
 
-  <button id="harvestBasketButton" class="harvest-basket-button" type="button" aria-expanded="false">
+  <button id="harvestBasketButton" class="harvest-basket-button list-basket-button" type="button" aria-expanded="false">
     <span class="basket-emoji">🧺</span>
-    <span class="basket-copy"><b id="selectedCount">0 items</b><small id="estimatedKg">Start your harvest</small></span>
-    <span class="basket-open">View</span>
+    <span class="basket-copy"><b id="selectedCount">0 selected</b><small id="estimatedKg">0 kg per week</small></span>
+    <span class="basket-open">Review</span>
   </button>
 
   <aside id="harvestBasketDrawer" class="harvest-basket-drawer" aria-hidden="true">
     <div class="basket-drawer-head">
-      <div><span class="eyebrow">My Weekly Harvest</span><h3>Your basket</h3></div>
+      <div><span class="eyebrow">My Weekly Harvest</span><h3>Your selected items</h3></div>
       <button id="closeBasketBtn" type="button" aria-label="Close basket">✕</button>
     </div>
     <div id="basketItems" class="basket-items"></div>
     <div class="basket-total"><span>Indicative weekly quantity</span><b id="basketTotalKg">0 kg</b></div>
-    <button type="button" id="clearSelection" class="basket-clear">Clear basket</button>
+    <button type="button" id="clearSelection" class="basket-clear">Clear selected items</button>
   </aside>
 
   <div class="explorer-actions harvest-explorer-actions">
