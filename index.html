@@ -4,6 +4,7 @@
   <base target="_top">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#173f35">
+  <!-- MyFarmBox Singapore Dashboard v5.6: Leaflet tile/layout fix -->
   <title>MyFarmBox Singapore Launch Dashboard V5</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIINfQ3ynHTuFOVXrLJ5gRZit9XQXv5Dq1s="
@@ -473,21 +474,38 @@
       background:#edf3ef;
       isolation:isolate;
     }
-    .member-map .leaflet-container,
+    /* Leaflet controls the size and transforms of its internal panes.
+       Never force width/height on .leaflet-map-pane or .leaflet-tile-pane;
+       doing so breaks tile alignment and can make the map overlap the address. */
+    .member-map.leaflet-container{
+      width:100%;
+      height:260px;
+      min-height:260px;
+      display:block;
+    }
+    .member-map .leaflet-pane,
     .member-map .leaflet-map-pane,
     .member-map .leaflet-tile-pane{
-      width:100%;
-      height:100%;
+      max-width:none !important;
+      max-height:none !important;
     }
     .map-meta{
+      position:relative;
+      z-index:2;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:12px;
+      width:100%;
       padding:14px;
       border-top:1px solid var(--line);
       background:#fff;
+      box-sizing:border-box;
+      overflow:hidden;
     }
+    .map-copy{min-width:0;flex:1 1 auto}
+    .map-copy small{overflow-wrap:anywhere;word-break:break-word}
+    .map-actions{flex:0 0 auto}
     .map-copy b{display:block;font-size:13px;color:var(--green)}
     .map-copy small{display:block;margin-top:4px;color:var(--muted);line-height:1.45}
     .map-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
@@ -597,7 +615,22 @@
       .quick-actions{position:sticky;bottom:10px;z-index:5;padding:8px;margin:12px 0 0;border-radius:17px;background:rgba(248,250,248,.94);backdrop-filter:blur(12px)}
       .drawer-section{padding:14px;border-radius:18px}
       .detail-grid,.form-grid{grid-template-columns:1fr}
-      .member-map{height:230px}
+      .member-map,
+      .member-map.leaflet-container{
+        height:230px;
+        min-height:230px;
+      }
+      .map-meta{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:12px;
+      }
+      .map-actions{
+        width:100%;
+        display:grid;
+        grid-template-columns:1fr 1fr;
+      }
+      .map-actions a,.map-actions button{width:100%}
       .map-meta{flex-direction:column}
       .map-actions{width:100%;justify-content:stretch}
       .map-actions a,.map-actions button{flex:1}
