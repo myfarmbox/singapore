@@ -1731,3 +1731,266 @@ function renderTabs(categories) {
     };
   });
 }
+
+/* =========================================================
+   v5.7 Apple Watch-inspired Harvest Cloud
+   This final override replaces the paginated product list.
+   ========================================================= */
+const HARVEST_CLOUD_SLOTS = [
+  [50,18,"large"],[27,24,"small"],[73,25,"small"],
+  [14,44,"small"],[38,43,"large"],[63,44,"large"],[86,45,"small"],
+  [25,67,"small"],[50,68,"large"],[75,67,"small"],
+  [12,82,"small"],[88,82,"small"]
+];
+
+const SHORT_PRODUCT_NAMES = {
+  "ladies finger":"Okra","lady finger":"Okra","country tomato":"Tomato",
+  "indian tomato":"Tomato","cherry tomato":"Cherry Tomato","red onion":"Onion",
+  "small onion":"Shallots","big onion":"Onion","drumstick leaves":"Moringa",
+  "murungai keerai":"Moringa","ponnanganni keerai":"Ponnanganni",
+  "pasalai keerai":"Spinach","arai keerai":"Amaranth","sirukeerai":"Amaranth",
+  "coriander leaves":"Coriander","curry leaves":"Curry Leaf",
+  "cluster beans":"Cluster Beans","french beans":"Beans","broad beans":"Beans",
+  "ridge gourd":"Ridge Gourd","bottle gourd":"Bottle Gourd","snake gourd":"Snake Gourd",
+  "bitter gourd":"Bitter Gourd","ash gourd":"Ash Gourd","green chilli":"Chilli",
+  "raw banana":"Plantain","elephant yam":"Yam","sweet potato":"Sweet Potato"
+};
+
+state.activeCloudProduct = "";
+state.pendingCloudQuantity = "";
+state.cloudOffset = 0;
+
+function shortProductName(product) {
+  const full = String(product.name || "Produce").trim();
+  const key = full.toLowerCase();
+  if (SHORT_PRODUCT_NAMES[key]) return SHORT_PRODUCT_NAMES[key];
+  const cleaned = full
+    .replace(/\b(fresh|organic|natural|indian|local|premium|green|red|white)\b/gi, "")
+    .replace(/\s+/g, " ").trim();
+  const words = cleaned.split(" ");
+  return words.length > 2 ? words.slice(0, 2).join(" ") : cleaned;
+}
+
+function getFilteredProducts() {
+  return state.products.filter(product => {
+    const categoryMatch = state.category === "All" || product.category === state.category;
+    const haystack = `${product.name} ${product.tanglish} ${product.category}`.toLowerCase();
+    return categoryMatch && (!state.search || haystack.includes(state.search));
+  });
+}
+
+function visibleCloudProducts() {
+  const available = getFilteredProducts().filter(product => !state.selected.has(product.id));
+  if (!available.length) return [];
+  const count = Math.min(HARVEST_CLOUD_SLOTS.length, available.length);
+  const offset = state.cloudOffset % available.length;
+  return Array.from({length: count}, (_, index) => available[(offset + index) % available.length]);
+}
+
+function renderProducts() {
+  const filtered = getFilteredProducts();
+  const visible = visibleCloudProducts();
+  const cloud = $("harvestCloud");
+  const list = $("productList");
+  if (!list || !cloud) return;
+
+  $("catalogState").classList.toggle("hidden", visible.length > 0);
+  $("catalogState").textContent = state.products.length
+    ? "Every matching product is already in your basket."
+    : "Loading produce…";
+
+  list.innerHTML = visible.map((product, index) => {
+    const slot = HARVEST_CLOUD_SLOTS[index];
+    const active = state.activeCloudProduct === product.id;
+    return `<button type="button" class="cloud-product ${slot[2]} ${active ? "active" : ""}"
+      data-id="${escapeAttribute(product.id)}"
+      style="--x:${slot[0]}%;--y:${slot[1]}%;--delay:${-(index % 6) * .65}s"
+      aria-label="Open ${escapeAttribute(product.name)}">
+      ${product.imageUrl ? `<img src="${escapeAttribute(product.imageUrl)}" alt="" loading="lazy" onerror="this.remove()">` : ""}
+      <span class="cloud-name">${escapeHtml(shortProductName(product))}</span>
+    </button>`;
+  }).join("");
+
+  cloud.classList.toggle("has-active", Boolean(state.activeCloudProduct));
+  list.querySelectorAll(".cloud-product").forEach(button => {
+    button.onclick = () => openCloudProduct(button.dataset.id);
+  });
+
+  $("catalogRange").textContent = filtered.length
+    ? `${filtered.length - state.selected.size < 0 ? 0 : visible.length} fresh choices on screen`
+    : "No products found";
+  $("catalogPageLabel").textContent = `${state.selected.size} already in your basket`;
+}
+
+function openCloudProduct(id) {
+  const product = state.products.find(item => item.id === id);
+  if (!product) return;
+  state.activeCloudProduct = id;
+  state.pendingCloudQuantity = product.quantities?.[0]?.label || "1";
+  renderProducts();
+  renderProductFocus(product);
+}
+
+function closeCloudProduct() {
+  state.activeCloudProduct = "";
+  state.pendingCloudQuantity = "";
+  $("productFocusCard").classList.add("hidden");
+  renderProducts();
+}
+
+function renderProductFocus(product) {
+  const card = $("productFocusCard");
+  if (!card) return;
+  const quantities = product.quantities || [];
+  card.innerHTML = `<div class="focus-top">
+    <div class="focus-image">${product.imageUrl ? `<img src="${escapeAttribute(product.imageUrl)}" alt="${escapeAttribute(product.name)}" onerror="this.outerHTML='MFB'">` : "MFB"}</div>
+    <div class="focus-title"><b>${escapeHtml(product.name)}</b><small>${escapeHtml(product.tanglish || product.category || "Fresh produce")}</small></div>
+    <button type="button" class="focus-close" aria-label="Close">✕</button>
+  </div>
+  <span class="focus-label">CHOOSE WEEKLY QUANTITY</span>
+  <div class="focus-quantities">${quantities.map((option,index) => `<button type="button" class="focus-quantity ${index===0?"selected":""}" data-label="${escapeAttribute(option.label)}" data-kg="${Number(option.estimatedKg||0)}">${escapeHtml(option.label)}</button>`).join("")}</div>
+  <button type="button" class="focus-add">Add to My Harvest</button>`;
+  card.classList.remove("hidden");
+  card.querySelector(".focus-close").onclick = closeCloudProduct;
+  card.querySelectorAll(".focus-quantity").forEach(button => {
+    button.onclick = () => {
+      state.pendingCloudQuantity = button.dataset.label;
+      card.querySelectorAll(".focus-quantity").forEach(item => item.classList.toggle("selected", item === button));
+    };
+  });
+  card.querySelector(".focus-add").onclick = () => addFocusedProduct(product.id);
+  card.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function addFocusedProduct(id) {
+  const product = state.products.find(item => item.id === id);
+  if (!product) return;
+  const option = (product.quantities || []).find(item => item.label === state.pendingCloudQuantity) || product.quantities?.[0] || {label:"1",estimatedKg:0};
+  state.selected.set(id, {
+    productId: product.id,
+    productName: product.name,
+    category: product.category,
+    weeklyQuantity: option.label,
+    estimatedKg: Number(option.estimatedKg || 0),
+    expectedPrice: ""
+  });
+
+  const tile = document.querySelector(`.cloud-product[data-id="${CSS.escape(id)}"]`);
+  if (tile) tile.classList.add("harvested");
+  state.activeCloudProduct = "";
+  state.pendingCloudQuantity = "";
+  state.cloudOffset += 1;
+  $("productFocusCard").classList.add("hidden");
+  updateSummary();
+  scheduleDraftSave();
+  bumpBasket();
+  setTimeout(renderProducts, 430);
+}
+
+function updateSummary() {
+  const items = [...state.selected.values()];
+  const totalKg = items.reduce((sum,item) => sum + Number(item.estimatedKg || 0),0);
+  $("selectedCount").textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
+  $("estimatedKg").textContent = items.length ? `${formatNumber(totalKg)} kg per week` : "Start your harvest";
+  if ($("basketTotalKg")) $("basketTotalKg").textContent = `${formatNumber(totalKg)} kg`;
+  renderBasketItems();
+}
+
+function renderBasketItems() {
+  const holder = $("basketItems");
+  if (!holder) return;
+  const items = [...state.selected.values()];
+  if (!items.length) {
+    holder.innerHTML = '<div class="basket-empty">Your basket is waiting for its first harvest 🌿</div>';
+    return;
+  }
+  holder.innerHTML = items.map(item => {
+    const product = state.products.find(productItem => productItem.id === item.productId) || {};
+    return `<article class="basket-item">
+      <div class="basket-item-thumb">${product.imageUrl ? `<img src="${escapeAttribute(product.imageUrl)}" alt="" onerror="this.outerHTML='🌿'">` : "🌿"}</div>
+      <div><b>${escapeHtml(shortProductName(product.name ? product : {name:item.productName}))}</b><small>${escapeHtml(item.weeklyQuantity)}</small></div>
+      <button type="button" class="basket-remove" data-remove="${escapeAttribute(item.productId)}" aria-label="Remove ${escapeAttribute(item.productName)}">−</button>
+    </article>`;
+  }).join("");
+  holder.querySelectorAll("[data-remove]").forEach(button => {
+    button.onclick = () => {
+      state.selected.delete(button.dataset.remove);
+      state.cloudOffset += 1;
+      updateSummary();
+      renderProducts();
+      scheduleDraftSave();
+    };
+  });
+}
+
+function bumpBasket() {
+  const button = $("harvestBasketButton");
+  if (!button) return;
+  button.classList.remove("bump");
+  void button.offsetWidth;
+  button.classList.add("bump");
+  setTimeout(() => button.classList.remove("bump"),550);
+}
+
+function toggleBasket(force) {
+  const drawer = $("harvestBasketDrawer");
+  const button = $("harvestBasketButton");
+  const open = typeof force === "boolean" ? force : !drawer.classList.contains("open");
+  drawer.classList.toggle("open",open);
+  drawer.setAttribute("aria-hidden",String(!open));
+  button.setAttribute("aria-expanded",String(open));
+  if (open) renderBasketItems();
+}
+
+function bindProductControls() {
+  $("productSearch").oninput = event => {
+    state.search = event.target.value.trim().toLowerCase();
+    state.cloudOffset = 0;
+    closeCloudProduct();
+    scheduleDraftSave();
+  };
+  $("clearSelection").onclick = () => {
+    state.selected.clear();
+    state.cloudOffset = 0;
+    updateSummary();
+    renderProducts();
+    scheduleDraftSave();
+  };
+  $("harvestBasketButton").onclick = () => toggleBasket();
+  $("closeBasketBtn").onclick = () => toggleBasket(false);
+}
+
+function renderTabs(categories) {
+  state.productCategories = categories;
+  const values = ["All", ...categories];
+  const labels = {All:"All",Veggie:"Essentials",Fruits:"Seasonal",Greens:"Greens"};
+  $("categoryTabs").innerHTML = values.map(category => `<button type="button" class="${category===state.category?"active":""}" data-category="${escapeAttribute(category)}">${escapeHtml(labels[category]||category)}</button>`).join("");
+  $("categoryTabs").querySelectorAll("button").forEach(button => {
+    button.onclick = () => {
+      state.category = button.dataset.category;
+      state.cloudOffset = 0;
+      state.activeCloudProduct = "";
+      $("productFocusCard").classList.add("hidden");
+      renderTabs(categories);
+      renderProducts();
+      scheduleDraftSave();
+    };
+  });
+}
+
+function openProductExplorer() {
+  $("successDialog").close();
+  state.selected.clear();
+  state.category = "All";
+  state.search = "";
+  state.cloudOffset = 0;
+  state.activeCloudProduct = "";
+  $("productSearch").value = "";
+  $("productFocusCard").classList.add("hidden");
+  toggleBasket(false);
+  renderTabs(state.productCategories);
+  renderProducts();
+  updateSummary();
+  $("explorerMessage").textContent = "";
+  $("productExplorerDialog").showModal();
+}
