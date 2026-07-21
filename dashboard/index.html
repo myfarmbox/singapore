@@ -459,34 +459,52 @@
 
 
     .member-map-wrap{
+      display:block;
+      width:100%;
       overflow:hidden;
       border:1px solid var(--line);
       border-radius:18px;
       background:#f7faf8;
     }
-    .member-map{
+    .member-map-frame{
+      display:block;
       width:100%;
-      height:260px;
+      height:280px;
+      border:0;
       background:#edf3ef;
     }
     .map-meta{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      padding:14px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:start;
+      gap:14px;
+      width:100%;
+      padding:16px;
       border-top:1px solid var(--line);
       background:#fff;
     }
+    .map-copy{min-width:0}
     .map-copy b{display:block;font-size:13px;color:var(--green)}
-    .map-copy small{display:block;margin-top:4px;color:var(--muted);line-height:1.45}
-    .map-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .map-copy small{
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      line-height:1.5;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+    .map-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
     .map-actions a,.map-actions button{
-      min-height:38px;
+      min-height:40px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:0 12px;
+      padding:0 13px;
       border:1px solid var(--line);
       border-radius:11px;
       background:#fff;
@@ -495,6 +513,7 @@
       font-weight:750;
       font-size:11px;
       cursor:pointer;
+      white-space:nowrap;
     }
     .map-actions a:hover,.map-actions button:hover{background:var(--mint)}
     .map-empty{
@@ -505,26 +524,6 @@
       text-align:center;
       color:var(--muted);
       font-size:12px;
-    }
-    .mfb-leaflet-marker{
-      background:transparent;
-      border:0;
-    }
-    .mfb-leaflet-pin{
-      width:30px;height:30px;
-      border-radius:50% 50% 50% 0;
-      background:#228B22;
-      transform:rotate(-45deg);
-      border:3px solid #fff;
-      box-shadow:0 6px 18px rgba(0,0,0,.28);
-    }
-    .mfb-leaflet-pin:after{
-      content:"";
-      position:absolute;
-      width:8px;height:8px;
-      left:8px;top:8px;
-      border-radius:50%;
-      background:#fff;
     }
 
 
@@ -587,8 +586,8 @@
       .quick-actions{position:sticky;bottom:10px;z-index:5;padding:8px;margin:12px 0 0;border-radius:17px;background:rgba(248,250,248,.94);backdrop-filter:blur(12px)}
       .drawer-section{padding:14px;border-radius:18px}
       .detail-grid,.form-grid{grid-template-columns:1fr}
-      .member-map{height:230px}
-      .map-meta{flex-direction:column}
+      .member-map-frame{height:240px}
+      .map-meta{grid-template-columns:1fr}
       .map-actions{width:100%;justify-content:stretch}
       .map-actions a,.map-actions button{flex:1}
       .full{grid-column:auto}
@@ -716,7 +715,13 @@
       <section class="drawer-section">
         <div class="section-title"><h3>Member location</h3><small>Delivery planning</small></div>
         <div class="member-map-wrap">
-          <div id="memberMap" class="member-map"></div>
+          <iframe
+            id="memberMapFrame"
+            class="member-map-frame"
+            title="Member location map"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
           <div id="memberMapEmpty" class="map-empty hidden">
             Location coordinates are not available for this member.
           </div>
@@ -1151,11 +1156,10 @@
     document.body.style.overflow = "";
     state.selected = null;
 
-    if (state.memberMap) {
-      state.memberMap.remove();
-      state.memberMap = null;
-      state.memberMarker = null;
-    }
+    const mapFrame = $("memberMapFrame");
+    if (mapFrame) mapFrame.src = "about:blank";
+    state.memberMap = null;
+    state.memberMarker = null;
   }
 
   function deriveNextAction(lead) {
@@ -1189,12 +1193,13 @@
       latitude !== 0 &&
       longitude !== 0;
 
-    const mapElement = $("memberMap");
+    const frame = $("memberMapFrame");
     const emptyElement = $("memberMapEmpty");
+
     const mapLink =
       lead.Map_Link ||
       (hasCoordinates
-        ? `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=17/${latitude}/${longitude}`
+        ? `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`
         : "");
 
     state.memberMapLink = mapLink;
@@ -1214,63 +1219,18 @@
     $("openMapLink").classList.toggle("hidden", !mapLink);
     $("copyMapLink").classList.toggle("hidden", !mapLink);
 
-    if (!hasCoordinates || typeof L === "undefined") {
-      mapElement.classList.add("hidden");
+    if (!hasCoordinates) {
+      frame.classList.add("hidden");
+      frame.src = "about:blank";
       emptyElement.classList.remove("hidden");
-
-      if (state.memberMap) {
-        state.memberMap.remove();
-        state.memberMap = null;
-        state.memberMarker = null;
-      }
       return;
     }
 
-    mapElement.classList.remove("hidden");
     emptyElement.classList.add("hidden");
+    frame.classList.remove("hidden");
 
-    if (state.memberMap) {
-      state.memberMap.remove();
-      state.memberMap = null;
-      state.memberMarker = null;
-    }
-
-    state.memberMap = L.map("memberMap", {
-      zoomControl: true,
-      scrollWheelZoom: false,
-      attributionControl: true
-    }).setView([latitude, longitude], 16);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: "&copy; OpenStreetMap contributors"
-    }).addTo(state.memberMap);
-
-    const markerIcon = L.divIcon({
-      className: "mfb-leaflet-marker",
-      html: '<div class="mfb-leaflet-pin"></div>',
-      iconSize: [34, 42],
-      iconAnchor: [17, 39]
-    });
-
-    state.memberMarker = L.marker(
-      [latitude, longitude],
-      { icon: markerIcon }
-    ).addTo(state.memberMap);
-
-    const popupText =
-      lead.Location_Name ||
-      lead.Location_Address ||
-      lead.Postal_Code ||
-      lead.Name ||
-      "Member location";
-
-    state.memberMarker.bindPopup(esc(popupText));
-
-    // Drawer animations can initially give Leaflet the wrong width.
-    setTimeout(() => {
-      if (state.memberMap) state.memberMap.invalidateSize();
-    }, 180);
+    frame.src =
+      `https://www.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`;
   }
 
   async function copyMemberMapLink() {
