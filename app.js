@@ -1994,3 +1994,262 @@ function openProductExplorer() {
   $("explorerMessage").textContent = "";
   $("productExplorerDialog").showModal();
 }
+
+
+/* =========================================================
+   v5.8 Guided Harvest List — final overrides
+   ========================================================= */
+state.skippedProducts = new Set();
+state.notNeededProducts = new Set();
+state.reviewedProducts = new Set();
+state.listBatchSize = 6;
+
+function productIconFallback(product) {
+  const name = String(product.name || "").toLowerCase();
+  if (/tomato/.test(name)) return "🍅";
+  if (/onion|shallot/.test(name)) return "🧅";
+  if (/potato|yam/.test(name)) return "🥔";
+  if (/carrot/.test(name)) return "🥕";
+  if (/brinjal|eggplant/.test(name)) return "🍆";
+  if (/chilli|capsicum|pepper/.test(name)) return "🌶️";
+  if (/mango/.test(name)) return "🥭";
+  if (/banana|plantain/.test(name)) return "🍌";
+  if (/coconut/.test(name)) return "🥥";
+  if (/cucumber|gourd|okra|ladies finger/.test(name)) return "🥒";
+  if (/beans|peas/.test(name)) return "🫛";
+  if (/lemon|lime|orange/.test(name)) return "🍋";
+  if (/apple/.test(name)) return "🍎";
+  if (/watermelon/.test(name)) return "🍉";
+  if (/pineapple/.test(name)) return "🍍";
+  if (/garlic/.test(name)) return "🧄";
+  if (/ginger/.test(name)) return "🫚";
+  if (/spinach|keerai|leaf|coriander|mint|moringa|greens/.test(name)) return "🥬";
+  return "🌿";
+}
+
+function getFilteredProducts() {
+  return state.products.filter(product => {
+    const categoryMatch = state.category === "All" || product.category === state.category;
+    const haystack = `${product.name} ${product.tanglish} ${product.category}`.toLowerCase();
+    return categoryMatch && (!state.search || haystack.includes(state.search));
+  });
+}
+
+function getPendingProducts() {
+  return getFilteredProducts().filter(product =>
+    !state.selected.has(product.id) &&
+    !state.skippedProducts.has(product.id) &&
+    !state.notNeededProducts.has(product.id)
+  );
+}
+
+function renderProducts() {
+  const all = getFilteredProducts();
+  const pending = getPendingProducts();
+  const list = $("productList");
+  if (!list) return;
+
+  $("catalogState").classList.toggle("hidden", pending.length > 0 || all.length === 0);
+  $("catalogState").textContent = state.products.length ? "No matching products left to review." : "Loading produce…";
+
+  if (!pending.length && all.length) {
+    list.innerHTML = `<div class="harvest-done-state"><span>🌿</span><h3>You’ve reviewed this harvest.</h3><p>Open your basket to check selected products, or choose another category.</p></div>`;
+  } else {
+    list.innerHTML = pending.slice(0, state.listBatchSize).map(product => {
+      const quantities = product.quantities || [];
+      return `<article class="harvest-list-item" data-id="${escapeAttribute(product.id)}">
+        <div class="harvest-list-icon">
+          ${product.imageUrl ? `<img src="${escapeAttribute(product.imageUrl)}" alt="${escapeAttribute(shortProductName(product))}" loading="lazy" onerror="this.outerHTML='<span>${productIconFallback(product)}</span>'">` : `<span>${productIconFallback(product)}</span>`}
+        </div>
+        <div class="harvest-list-copy">
+          <b>${escapeHtml(shortProductName(product))}</b>
+          <small>${escapeHtml(product.tanglish || product.category || "Fresh produce")}</small>
+        </div>
+        <div class="harvest-list-actions">
+          <select aria-label="Weekly quantity for ${escapeAttribute(product.name)}">
+            ${quantities.map(option => `<option value="${escapeAttribute(option.label)}" data-kg="${Number(option.estimatedKg || 0)}">${escapeHtml(option.label)}</option>`).join("")}
+          </select>
+          <button type="button" class="harvest-action add" data-action="add">Add</button>
+          <button type="button" class="harvest-action later" data-action="later">Maybe Later</button>
+          <button type="button" class="harvest-action no" data-action="no">Don’t Need</button>
+        </div>
+      </article>`;
+    }).join("");
+
+    list.querySelectorAll(".harvest-list-item").forEach(row => {
+      row.querySelectorAll("[data-action]").forEach(button => {
+        button.onclick = () => reviewProduct(row.dataset.id, button.dataset.action, row);
+      });
+    });
+  }
+
+  updateReviewStats();
+}
+
+function reviewProduct(id, action, row) {
+  const product = state.products.find(item => item.id === id);
+  if (!product) return;
+
+  if (action === "add") {
+    const select = row.querySelector("select");
+    const option = select.options[select.selectedIndex];
+    state.selected.set(id, {
+      productId: product.id,
+      productName: product.name,
+      category: product.category,
+      weeklyQuantity: option.value,
+      estimatedKg: Number(option.dataset.kg || 0),
+      expectedPrice: ""
+    });
+    state.skippedProducts.delete(id);
+    state.notNeededProducts.delete(id);
+    bumpBasket();
+  } else if (action === "later") {
+    state.skippedProducts.add(id);
+    state.selected.delete(id);
+    state.notNeededProducts.delete(id);
+  } else {
+    state.notNeededProducts.add(id);
+    state.selected.delete(id);
+    state.skippedProducts.delete(id);
+  }
+
+  state.reviewedProducts.add(id);
+  row.classList.add("leaving");
+  updateSummary();
+  scheduleDraftSave();
+  setTimeout(renderProducts, 320);
+}
+
+function updateReviewStats() {
+  const total = getFilteredProducts().length;
+  const reviewedInFilter = getFilteredProducts().filter(product =>
+    state.selected.has(product.id) || state.skippedProducts.has(product.id) || state.notNeededProducts.has(product.id)
+  ).length;
+  const percent = total ? Math.round((reviewedInFilter / total) * 100) : 0;
+  if ($("reviewedCount")) $("reviewedCount").textContent = `${reviewedInFilter} / ${total}`;
+  if ($("selectedStat")) $("selectedStat").textContent = state.selected.size;
+  if ($("skippedStat")) $("skippedStat").textContent = state.skippedProducts.size;
+  if ($("notNeededStat")) $("notNeededStat").textContent = state.notNeededProducts.size;
+  if ($("reviewProgressBar")) $("reviewProgressBar").style.width = `${percent}%`;
+}
+
+function updateSummary() {
+  const items = [...state.selected.values()];
+  const totalKg = items.reduce((sum,item) => sum + Number(item.estimatedKg || 0),0);
+  $("selectedCount").textContent = `${items.length} selected`;
+  $("estimatedKg").textContent = `${formatNumber(totalKg)} kg per week`;
+  if ($("basketTotalKg")) $("basketTotalKg").textContent = `${formatNumber(totalKg)} kg`;
+  renderBasketItems();
+  updateReviewStats();
+}
+
+function renderBasketItems() {
+  const holder = $("basketItems");
+  if (!holder) return;
+  const items = [...state.selected.values()];
+  if (!items.length) {
+    holder.innerHTML = '<div class="basket-empty">No products selected yet.</div>';
+    return;
+  }
+  holder.innerHTML = items.map(item => {
+    const product = state.products.find(productItem => productItem.id === item.productId) || {name:item.productName};
+    return `<article class="basket-item">
+      <div class="basket-item-thumb">${product.imageUrl ? `<img src="${escapeAttribute(product.imageUrl)}" alt="" onerror="this.outerHTML='${productIconFallback(product)}'">` : productIconFallback(product)}</div>
+      <div><b>${escapeHtml(shortProductName(product))}</b><small>${escapeHtml(item.weeklyQuantity)}</small></div>
+      <button type="button" class="basket-remove" data-remove="${escapeAttribute(item.productId)}" aria-label="Remove ${escapeAttribute(item.productName)}">−</button>
+    </article>`;
+  }).join("");
+  holder.querySelectorAll("[data-remove]").forEach(button => {
+    button.onclick = () => {
+      const id = button.dataset.remove;
+      state.selected.delete(id);
+      state.reviewedProducts.delete(id);
+      updateSummary();
+      renderProducts();
+      scheduleDraftSave();
+    };
+  });
+}
+
+function bindProductControls() {
+  $("productSearch").oninput = event => {
+    state.search = event.target.value.trim().toLowerCase();
+    renderProducts();
+    scheduleDraftSave();
+  };
+  $("clearSelection").onclick = () => {
+    state.selected.clear();
+    updateSummary();
+    renderProducts();
+    scheduleDraftSave();
+  };
+  $("harvestBasketButton").onclick = () => toggleBasket();
+  $("closeBasketBtn").onclick = () => toggleBasket(false);
+}
+
+function renderTabs(categories) {
+  state.productCategories = categories;
+  const values = ["All", ...categories];
+  const labels = {All:"All",Veggie:"Essentials",Fruits:"Seasonal",Greens:"Greens"};
+  $("categoryTabs").innerHTML = values.map(category => `<button type="button" class="${category===state.category?"active":""}" data-category="${escapeAttribute(category)}">${escapeHtml(labels[category]||category)}</button>`).join("");
+  $("categoryTabs").querySelectorAll("button").forEach(button => {
+    button.onclick = () => {
+      state.category = button.dataset.category;
+      renderTabs(categories);
+      renderProducts();
+      scheduleDraftSave();
+    };
+  });
+}
+
+function openProductExplorer() {
+  $("successDialog").close();
+  state.selected.clear();
+  state.skippedProducts.clear();
+  state.notNeededProducts.clear();
+  state.reviewedProducts.clear();
+  state.category = "All";
+  state.search = "";
+  $("productSearch").value = "";
+  toggleBasket(false);
+  renderTabs(state.productCategories);
+  renderProducts();
+  updateSummary();
+  $("explorerMessage").textContent = "";
+  $("productExplorerDialog").showModal();
+}
+
+async function saveProductPreferences() {
+  const button = $("saveProductPreferencesBtn");
+  const message = $("explorerMessage");
+  message.textContent = "";
+  if (!state.currentWaitlistId) {
+    message.textContent = "Your waitlist reference is missing. Please submit the main form again.";
+    return;
+  }
+  if (state.selected.size === 0) {
+    message.textContent = "Please add at least one product to your weekly harvest.";
+    return;
+  }
+  button.disabled = true;
+  button.textContent = "Saving…";
+  try {
+    const result = await apiPost({
+      action: "saveProductPreferences",
+      waitlistId: state.currentWaitlistId,
+      preferenceToken: state.currentPreferenceToken || "",
+      products: [...state.selected.values()],
+      maybeLaterProducts: [...state.skippedProducts],
+      notNeededProducts: [...state.notNeededProducts]
+    });
+    if (!result.ok) throw new Error(result.message || "Unable to save product preferences.");
+    $("productExplorerDialog").close();
+    $("productSavedDialog").showModal();
+  } catch (error) {
+    message.textContent = error.message || "Unable to save. Please try again.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save My Weekly Harvest";
+  }
+}
