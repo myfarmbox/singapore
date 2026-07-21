@@ -888,3 +888,65 @@ dialog strong{
   .product-explorer-dialog{width:calc(100% - 12px);max-height:94dvh;padding:16px;border-radius:20px}
   .explorer-head h2{font-size:26px}
 }
+
+/* =========================================================
+   v5.7 Apple Watch-inspired Harvest Cloud
+   ========================================================= */
+.harvest-cloud-dialog{width:min(920px,calc(100% - 20px));max-width:920px;max-height:94dvh;padding:24px;overflow:auto;background:#fbfcf6}
+.harvest-cloud-head h2{margin-bottom:6px}
+.harvest-toolbar{display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:12px;align-items:start;margin-top:18px}
+.harvest-toolbar .tabs{margin-top:0;max-width:460px}
+.harvest-cloud-status{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:16px 2px 10px}
+.harvest-cloud-status span,.harvest-cloud-status b{display:block}
+.harvest-cloud-status span{font-size:9px;letter-spacing:.16em;color:var(--gold);font-weight:800}
+.harvest-cloud-status b{margin-top:4px;font-size:13px;color:#34503e}
+.harvest-cloud-status small{color:var(--muted);font-size:11px}
+.harvest-cloud{position:relative;height:490px;border:1px solid rgba(34,139,34,.14);border-radius:32px;overflow:hidden;background:
+ radial-gradient(circle at 50% 48%,rgba(255,255,255,.98) 0 16%,rgba(245,245,220,.72) 45%,rgba(220,239,220,.72) 100%);
+ box-shadow:inset 0 0 70px rgba(34,139,34,.06)}
+.harvest-cloud:before{content:"";position:absolute;inset:14%;border:1px dashed rgba(34,139,34,.09);border-radius:50%;pointer-events:none}
+.harvest-cloud-products{position:absolute;inset:0;min-height:0;display:block}
+.cloud-product{--size:104px;position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);transform:translate(-50%,-50%);border:0;border-radius:44% 56% 48% 52%/52% 45% 55% 48%;padding:8px;background:linear-gradient(145deg,#fff,#eef6e8);box-shadow:0 12px 28px rgba(35,91,48,.14),inset 0 0 0 1px rgba(34,139,34,.11);color:#22442d;text-align:center;display:grid;place-items:center;overflow:hidden;transition:transform .42s cubic-bezier(.2,.9,.2,1),opacity .3s ease,filter .3s ease,box-shadow .3s ease;animation:cloudFloat 5.5s ease-in-out infinite;animation-delay:var(--delay)}
+.cloud-product:hover{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 18px 36px rgba(35,91,48,.2)}
+.cloud-product.large{--size:126px}.cloud-product.small{--size:86px}
+.cloud-product img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.2;filter:saturate(.8)}
+.cloud-product .cloud-name{position:relative;z-index:1;max-width:90%;font:700 13px/1.12 "Manrope";text-shadow:0 1px 8px rgba(255,255,255,.9)}
+.cloud-product.large .cloud-name{font-size:15px}.cloud-product.small .cloud-name{font-size:11px}
+.cloud-product.active{z-index:8;transform:translate(-50%,-50%) scale(1.18);box-shadow:0 24px 55px rgba(24,94,41,.26);animation-play-state:paused}
+.harvest-cloud.has-active .cloud-product:not(.active){transform:translate(-50%,-50%) scale(.84);opacity:.42;filter:blur(.4px)}
+.cloud-product.harvested{animation:harvestAway .52s cubic-bezier(.2,.8,.2,1) forwards;pointer-events:none}
+.cloud-hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-size:10px;color:rgba(52,80,62,.55);white-space:nowrap}
+@keyframes cloudFloat{0%,100%{margin-top:0}50%{margin-top:-8px}}
+@keyframes harvestAway{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}70%{opacity:.75;transform:translate(-10%,115%) scale(.42)}100%{opacity:0;transform:translate(75%,210%) scale(.12)}}
+.product-focus-card{position:relative;margin:-92px auto 16px;width:min(430px,calc(100% - 28px));z-index:12;padding:18px;border:1px solid rgba(34,139,34,.2);border-radius:24px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);box-shadow:0 20px 50px rgba(28,73,39,.2);animation:focusRise .3s ease}
+@keyframes focusRise{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+.focus-top{display:grid;grid-template-columns:58px minmax(0,1fr) 34px;gap:12px;align-items:center}
+.focus-image{width:58px;height:58px;border-radius:17px;overflow:hidden;background:var(--soft);display:grid;place-items:center;color:var(--forest);font-weight:800}
+.focus-image img{width:100%;height:100%;object-fit:cover}
+.focus-title b,.focus-title small{display:block}.focus-title b{font:700 19px "Manrope"}.focus-title small{margin-top:3px;color:var(--muted);font-weight:500}
+.focus-close{width:34px;height:34px;padding:0;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink)}
+.focus-label{display:block;margin:15px 0 8px;font-size:10px;letter-spacing:.12em;color:var(--gold)}
+.focus-quantities{display:flex;gap:8px;overflow:auto;padding-bottom:2px}
+.focus-quantity{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--forest);padding:9px 13px;font-size:12px;font-weight:700}
+.focus-quantity.selected{background:var(--forest);border-color:var(--forest);color:#fff}
+.focus-add{width:100%;margin-top:13px;border:0;border-radius:13px;background:var(--forest);color:#fff;padding:13px;font-weight:800}
+.harvest-basket-button{position:sticky;bottom:10px;z-index:25;width:100%;margin-top:15px;display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:12px;padding:11px 14px;border:0;border-radius:18px;background:var(--forest);color:#fff;box-shadow:0 16px 38px rgba(24,91,38,.26);text-align:left}
+.basket-emoji{display:grid;place-items:center;width:43px;height:43px;border-radius:14px;background:rgba(255,255,255,.14);font-size:24px}.basket-copy b,.basket-copy small{display:block}.basket-copy small{opacity:.72;margin-top:2px}.basket-open{font-size:11px;font-weight:800;padding:7px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px}
+.harvest-basket-button.bump .basket-emoji{animation:basketBump .5s ease}@keyframes basketBump{50%{transform:scale(1.24) rotate(-8deg)}}
+.harvest-basket-drawer{position:absolute;z-index:40;right:18px;bottom:20px;width:min(430px,calc(100% - 36px));max-height:70dvh;padding:20px;border:1px solid rgba(34,139,34,.18);border-radius:24px;background:#fff;box-shadow:0 28px 80px rgba(10,40,20,.3);transform:translateY(28px) scale(.96);opacity:0;pointer-events:none;transition:.28s ease;overflow:auto}
+.harvest-basket-drawer.open{transform:none;opacity:1;pointer-events:auto}
+.basket-drawer-head{display:flex;justify-content:space-between;align-items:flex-start}.basket-drawer-head h3{font:700 27px "Manrope";margin:4px 0}.basket-drawer-head button{width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink)}
+.basket-items{display:grid;gap:8px;margin:14px 0}.basket-empty{padding:28px 12px;text-align:center;border-radius:16px;background:var(--soft);color:var(--muted)}
+.basket-item{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:15px}.basket-item-thumb{width:42px;height:42px;border-radius:12px;overflow:hidden;background:var(--soft);display:grid;place-items:center}.basket-item-thumb img{width:100%;height:100%;object-fit:cover}.basket-item b,.basket-item small{display:block}.basket-item small{color:var(--muted);margin-top:2px}.basket-remove{width:31px;height:31px;padding:0;border:0;border-radius:50%;background:#f5f3ea;color:var(--danger)}
+.basket-total{display:flex;justify-content:space-between;gap:15px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.basket-total span{font-size:12px;color:var(--muted)}.basket-clear{width:100%;margin-top:12px;border:1px solid var(--line);background:#fff;color:var(--danger);padding:10px;border-radius:11px}
+.harvest-explorer-actions{margin-top:12px}
+@media(max-width:700px){
+ .harvest-cloud-dialog{width:calc(100% - 8px);padding:14px;border-radius:22px}
+ .harvest-toolbar{grid-template-columns:1fr}.harvest-toolbar .tabs{max-width:none}
+ .harvest-cloud{height:440px;border-radius:25px}
+ .cloud-product{--size:88px}.cloud-product.large{--size:108px}.cloud-product.small{--size:72px}
+ .cloud-product .cloud-name{font-size:11px}.cloud-product.large .cloud-name{font-size:13px}.cloud-product.small .cloud-name{font-size:9px}
+ .product-focus-card{margin:-82px auto 12px;padding:14px}
+ .harvest-cloud-status small{display:none}
+ .harvest-basket-drawer{position:fixed;left:8px;right:8px;bottom:8px;width:auto;max-height:82dvh}
+}
