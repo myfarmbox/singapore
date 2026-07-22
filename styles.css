@@ -1727,3 +1727,238 @@ dialog strong{
   .launch-hero__primary:hover{transform:none}
 }
 
+/* =========================================================
+   Instagram Section
+========================================================= */
+
+.instagram-section{
+
+    padding:120px 0;
+
+    background:#f8f7ef;
+
+}
+
+.instagram-grid{
+
+    display:grid;
+
+    grid-template-columns:1.1fr .9fr;
+
+    gap:70px;
+
+    align-items:center;
+
+}
+
+.instagram-copy h2{
+
+    margin:18px 0;
+
+    font:700 clamp(42px,5vw,64px)/1.05 "Manrope";
+
+    letter-spacing:-.05em;
+
+    color:#18352a;
+
+}
+
+.instagram-copy p{
+
+    font-size:18px;
+
+    line-height:1.8;
+
+    color:#667067;
+
+    max-width:620px;
+
+}
+
+.instagram-features{
+
+    display:grid;
+
+    gap:18px;
+
+    margin-top:36px;
+
+}
+
+.instagram-features article{
+
+    display:flex;
+
+    gap:18px;
+
+    align-items:center;
+
+    padding:20px;
+
+    background:white;
+
+    border-radius:18px;
+
+    border:1px solid rgba(0,0,0,.06);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.04);
+
+}
+
+.instagram-features span{
+
+    font-size:28px;
+
+}
+
+.instagram-features b{
+
+    display:block;
+
+    margin-bottom:4px;
+
+}
+
+.instagram-features small{
+
+    color:#666;
+
+    line-height:1.5;
+
+}
+
+.instagram-phone{
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.phone{
+
+    width:340px;
+
+    padding:24px;
+
+    border-radius:34px;
+
+    background:white;
+
+    box-shadow:
+
+        0 30px 60px rgba(0,0,0,.12);
+
+}
+
+.phone-header{
+
+    margin-bottom:22px;
+
+}
+
+.profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.avatar{
+
+    width:56px;
+
+    height:56px;
+
+    border-radius:50%;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#eaf5e8;
+
+    font-size:28px;
+
+}
+
+.profile strong{
+
+    display:block;
+
+    color:#18352a;
+
+}
+
+.profile small{
+
+    color:#6f756f;
+
+}
+
+.instagram-gallery{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:10px;
+
+    margin:22px 0 28px;
+
+}
+
+.instagram-gallery div{
+
+    aspect-ratio:1;
+
+    border-radius:16px;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#edf6ea;
+
+    font-size:34px;
+
+    transition:.25s;
+
+}
+
+.instagram-gallery div:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.phone .launch-hero__primary{
+
+    width:100%;
+
+}
+
+@media(max-width:900px){
+
+.instagram-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.instagram-copy{
+
+text-align:center;
+
+}
+
+.instagram-copy p{
+
+margin:auto;
+
+}
+
+}
