@@ -2429,4 +2429,3 @@ function renderBasketItems() {
     };
   });
 }
-
