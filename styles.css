@@ -832,6 +832,414 @@ dialog strong{
   .product-list {
     min-height: 0;
   }
+
+  /* =========================================================
+   MyFarmBox Singapore — Founding 50 Launch Hero
+   ========================================================= */
+
+.launch-hero {
+  position: relative;
+  padding: 42px 0 84px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 16% 12%,
+      rgba(212, 175, 55, 0.14),
+      transparent 26%
+    ),
+    linear-gradient(
+      135deg,
+      #f8f5e8 0%,
+      #f5f5dc 48%,
+      #edf4e8 100%
+    );
+}
+
+.launch-hero::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  left: -100px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.54);
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.launch-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(420px, 0.96fr);
+  min-height: 690px;
+  gap: clamp(38px, 6vw, 84px);
+  align-items: center;
+}
+
+.launch-hero__content {
+  max-width: 680px;
+  padding: 44px 0;
+}
+
+.launch-hero__brand-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 24px;
+  color: #3c2d22;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.launch-hero h1 {
+  margin: 0;
+  max-width: 680px;
+  color: #352419;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(48px, 5.6vw, 78px);
+  font-weight: 700;
+  line-height: 0.99;
+  letter-spacing: -0.058em;
+}
+
+.launch-hero h1 span {
+  display: block;
+  color: var(--forest);
+}
+
+.launch-hero__intro {
+  max-width: 630px;
+  margin: 30px 0 0;
+  color: #473f38;
+  font-size: clamp(17px, 1.65vw, 21px);
+  line-height: 1.55;
+}
+
+.launch-hero__intro strong {
+  color: #2b522e;
+}
+
+.launch-hero__together {
+  max-width: 620px;
+  margin: 12px 0 0;
+  color: #655c54;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.launch-hero__benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.launch-hero__benefits > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 39px;
+  padding: 8px 14px;
+  border: 1px solid rgba(34, 139, 34, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  color: #397b3c;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(41, 82, 43, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+.launch-hero__benefit-icon {
+  line-height: 1;
+}
+
+.launch-hero__welcome {
+  margin: 26px 0 0;
+  color: #554d45;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.launch-hero__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 17px;
+}
+
+.launch-hero__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  min-height: 58px;
+  padding: 15px 24px;
+  border-radius: 16px;
+  background: var(--forest);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 16px 34px rgba(34, 139, 34, 0.22);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.launch-hero__primary:hover {
+  transform: translateY(-2px);
+  background: var(--forest-2);
+  box-shadow: 0 20px 40px rgba(34, 139, 34, 0.27);
+}
+
+.launch-hero__primary span {
+  font-size: 19px;
+  transition: transform 0.2s ease;
+}
+
+.launch-hero__primary:hover span {
+  transform: translateX(3px);
+}
+
+.launch-hero__whatsapp {
+  color: var(--forest);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.launch-hero__whatsapp:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.launch-hero__assurance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 15px 0 0;
+  color: #756c63;
+  font-size: 11px;
+}
+
+.launch-hero__assurance span {
+  color: var(--gold);
+}
+
+.launch-hero__availability {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+  color: #33573a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.launch-hero__availability-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--forest);
+  box-shadow: 0 0 0 5px rgba(34, 139, 34, 0.11);
+}
+
+.launch-hero__visual {
+  position: relative;
+  align-self: stretch;
+  min-height: 620px;
+  overflow: hidden;
+  border-radius: 34px;
+  background: #e6eadf;
+  box-shadow: 0 30px 80px rgba(48, 54, 39, 0.18);
+}
+
+.launch-hero__visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(24, 32, 21, 0.19),
+      transparent 28%
+    );
+  pointer-events: none;
+}
+
+.launch-hero__visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 620px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.launch-hero__image-label {
+  position: absolute;
+  z-index: 2;
+  right: 20px;
+  bottom: 20px;
+  min-width: 166px;
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 15px;
+  background: rgba(20, 45, 27, 0.74);
+  color: #ffffff;
+  backdrop-filter: blur(14px);
+}
+
+.launch-hero__image-label span,
+.launch-hero__image-label strong {
+  display: block;
+}
+
+.launch-hero__image-label span {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.74;
+}
+
+.launch-hero__image-label strong {
+  margin-top: 4px;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+}
+
+/* Keep anchor destination clear of the sticky navigation */
+#waitlist {
+  scroll-margin-top: 88px;
+}
+
+@media (max-width: 960px) {
+  .launch-hero {
+    padding: 30px 0 66px;
+  }
+
+  .launch-hero__inner {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 30px;
+  }
+
+  .launch-hero__content {
+    max-width: 760px;
+    padding: 28px 0 0;
+  }
+
+  .launch-hero__visual {
+    min-height: 520px;
+  }
+
+  .launch-hero__visual img {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 580px) {
+  .launch-hero {
+    padding: 12px 0 46px;
+  }
+
+  .launch-hero__inner {
+    width: 100%;
+    gap: 0;
+  }
+
+  .launch-hero__content {
+    order: 2;
+    width: calc(100% - 24px);
+    margin: -30px auto 0;
+    padding: 24px 20px 26px;
+    border: 1px solid rgba(34, 139, 34, 0.13);
+    border-radius: 24px;
+    background: rgba(250, 249, 242, 0.97);
+    box-shadow: 0 18px 45px rgba(38, 64, 40, 0.14);
+    backdrop-filter: blur(15px);
+  }
+
+  .launch-hero__visual {
+    order: 1;
+    width: 100%;
+    min-height: 420px;
+    border-radius: 0 0 28px 28px;
+    box-shadow: none;
+  }
+
+  .launch-hero__visual img {
+    min-height: 420px;
+    object-position: 57% center;
+  }
+
+  .launch-hero__image-label {
+    top: 16px;
+    right: 14px;
+    bottom: auto;
+    min-width: 145px;
+  }
+
+  .launch-hero__brand-line {
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  .launch-hero h1 {
+    font-size: clamp(40px, 12vw, 52px);
+    line-height: 1;
+  }
+
+  .launch-hero__intro {
+    margin-top: 21px;
+    font-size: 16px;
+  }
+
+  .launch-hero__together {
+    font-size: 14px;
+  }
+
+  .launch-hero__benefits {
+    display: grid;
+  }
+
+  .launch-hero__benefits > span {
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .launch-hero__actions {
+    display: grid;
+    gap: 14px;
+  }
+
+  .launch-hero__primary {
+    width: 100%;
+  }
+
+  .launch-hero__whatsapp {
+    text-align: center;
+  }
+
+  .launch-hero__assurance {
+    justify-content: center;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .launch-hero__availability {
+    justify-content: center;
+    text-align: center;
+    line-height: 1.45;
+  }
 }
 /* =========================================================
    v5.0 Simple produce interests, budget slider and explorer
