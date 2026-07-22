@@ -833,473 +833,413 @@ dialog strong{
     min-height: 0;
   }
 }
+
 /* =========================================================
-   MyFarmBox Singapore — Founding 50 Immersive Hero
+   MyFarmBox Singapore — Founding 50 Launch Hero
    ========================================================= */
 
-.founding-hero {
+.launch-hero {
   position: relative;
-  min-height: 760px;
+  padding: 42px 0 84px;
   overflow: hidden;
-  background: #e9eadf;
-  isolation: isolate;
-}
-
-.founding-hero__background {
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-}
-
-.founding-hero__background img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-  transform: scale(1.01);
-}
-
-/* Gentle lighting and text readability */
-.founding-hero__shade {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
   background:
-    linear-gradient(
-      90deg,
-      rgba(249, 247, 237, 0.98) 0%,
-      rgba(249, 247, 237, 0.96) 30%,
-      rgba(249, 247, 237, 0.76) 48%,
-      rgba(249, 247, 237, 0.14) 67%,
-      rgba(249, 247, 237, 0.02) 100%
+    radial-gradient(
+      circle at 16% 12%,
+      rgba(212, 175, 55, 0.14),
+      transparent 26%
     ),
     linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.08),
-      rgba(31, 39, 25, 0.06)
+      135deg,
+      #f8f5e8 0%,
+      #f5f5dc 48%,
+      #edf4e8 100%
     );
 }
 
-.founding-hero::before {
+.launch-hero::before {
   content: "";
   position: absolute;
-  z-index: -1;
-  top: -170px;
-  left: -160px;
-  width: 600px;
-  height: 600px;
+  top: -120px;
+  left: -100px;
+  width: 520px;
+  height: 520px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.38);
-  filter: blur(8px);
+  background: rgba(255, 255, 255, 0.54);
+  filter: blur(4px);
   pointer-events: none;
 }
 
-.founding-hero__shell {
+.launch-hero__inner {
   position: relative;
-  min-height: 760px;
-  display: flex;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(420px, 0.96fr);
+  min-height: 690px;
+  gap: clamp(38px, 6vw, 84px);
   align-items: center;
-  padding-top: 54px;
-  padding-bottom: 54px;
 }
 
-.founding-hero__card {
-  position: relative;
-  z-index: 3;
-  width: min(690px, 62%);
-  padding: 48px 58px 48px 50px;
-  border: 1px solid rgba(44, 102, 45, 0.10);
-  border-radius: 30px;
-  background:
-    linear-gradient(
-      120deg,
-      rgba(250, 248, 240, 0.985),
-      rgba(250, 248, 240, 0.94)
-    );
-  box-shadow:
-    0 30px 80px rgba(46, 57, 37, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(16px);
+.launch-hero__content {
+  max-width: 680px;
+  padding: 44px 0;
 }
 
-.founding-hero__brand {
+.launch-hero__brand-line {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  margin-bottom: 22px;
-  color: #3b2b21;
-  font-size: 13px;
+  margin-bottom: 24px;
+  color: #3c2d22;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.04em;
 }
 
-.founding-hero h1 {
-  max-width: 650px;
+.launch-hero h1 {
   margin: 0;
+  max-width: 680px;
   color: #352419;
   font-family: "Manrope", sans-serif;
-  font-size: clamp(48px, 5.1vw, 74px);
+  font-size: clamp(48px, 5.6vw, 78px);
   font-weight: 700;
   line-height: 0.99;
   letter-spacing: -0.058em;
 }
 
-.founding-hero h1 span {
+.launch-hero h1 span {
   display: block;
   color: var(--forest);
 }
 
-.founding-hero__intro {
-  max-width: 590px;
-  margin: 28px 0 0;
-  color: #403a34;
-  font-size: clamp(17px, 1.45vw, 20px);
-  line-height: 1.6;
+.launch-hero__intro {
+  max-width: 630px;
+  margin: 30px 0 0;
+  color: #473f38;
+  font-size: clamp(17px, 1.65vw, 21px);
+  line-height: 1.55;
 }
 
-.founding-hero__intro strong {
-  color: #2b592e;
-  font-weight: 700;
+.launch-hero__intro strong {
+  color: #2b522e;
 }
 
-.founding-hero__together {
-  max-width: 580px;
-  margin: 11px 0 0;
-  color: #686057;
-  font-size: 15px;
+.launch-hero__together {
+  max-width: 620px;
+  margin: 12px 0 0;
+  color: #655c54;
+  font-size: 16px;
   line-height: 1.65;
 }
 
-.founding-hero__benefits {
+.launch-hero__benefits {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 25px;
 }
 
-.founding-hero__benefit {
+.launch-hero__benefits > span {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
+  min-height: 39px;
   padding: 8px 14px;
   border: 1px solid rgba(34, 139, 34, 0.16);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  color: #38743c;
-  font-size: 11px;
+  background: rgba(255, 255, 255, 0.76);
+  color: #397b3c;
+  font-size: 12px;
   font-weight: 700;
-  box-shadow: 0 7px 20px rgba(40, 84, 43, 0.055);
+  box-shadow: 0 6px 18px rgba(41, 82, 43, 0.05);
+  backdrop-filter: blur(8px);
 }
 
-.founding-hero__benefit-icon {
-  display: inline-grid;
-  place-items: center;
+.launch-hero__benefit-icon {
+  line-height: 1;
+}
+
+.launch-hero__welcome {
+  margin: 26px 0 0;
+  color: #554d45;
   font-size: 14px;
-}
-
-.founding-hero__welcome {
-  margin: 24px 0 0;
-  color: #574f47;
-  font-size: 13px;
   font-style: italic;
 }
 
-.founding-hero__actions {
+.launch-hero__actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 17px;
-  margin-top: 16px;
+  gap: 16px;
+  margin-top: 17px;
 }
 
-.founding-hero__primary {
+.launch-hero__primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  min-height: 60px;
-  padding: 15px 25px;
+  gap: 13px;
+  min-height: 58px;
+  padding: 15px 24px;
   border-radius: 16px;
   background: var(--forest);
   color: #ffffff;
   text-decoration: none;
   font-size: 15px;
   font-weight: 700;
-  box-shadow: 0 16px 35px rgba(34, 139, 34, 0.24);
+  box-shadow: 0 16px 34px rgba(34, 139, 34, 0.22);
   transition:
     transform 0.2s ease,
     background 0.2s ease,
     box-shadow 0.2s ease;
 }
 
-.founding-hero__primary:hover {
+.launch-hero__primary:hover {
   transform: translateY(-2px);
   background: var(--forest-2);
-  box-shadow: 0 21px 42px rgba(34, 139, 34, 0.28);
+  box-shadow: 0 20px 40px rgba(34, 139, 34, 0.27);
 }
 
-.founding-hero__arrow {
+.launch-hero__primary span {
   font-size: 19px;
   transition: transform 0.2s ease;
 }
 
-.founding-hero__primary:hover .founding-hero__arrow {
-  transform: translateX(4px);
+.launch-hero__primary:hover span {
+  transform: translateX(3px);
 }
 
-.founding-hero__whatsapp {
+.launch-hero__whatsapp {
   color: var(--forest);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
 }
 
-.founding-hero__whatsapp:hover {
+.launch-hero__whatsapp:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
-.founding-hero__assurance {
+.launch-hero__assurance {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
   gap: 7px;
-  margin: 14px 0 0;
-  color: #736b62;
-  font-size: 10px;
+  margin: 15px 0 0;
+  color: #756c63;
+  font-size: 11px;
 }
 
-.founding-hero__assurance i {
+.launch-hero__assurance span {
   color: var(--gold);
-  font-style: normal;
 }
 
-.founding-hero__availability {
+.launch-hero__availability {
   display: flex;
   align-items: center;
   gap: 9px;
-  margin-top: 17px;
-  color: #34583a;
-  font-size: 10px;
+  margin-top: 18px;
+  color: #33573a;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.055em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.founding-hero__availability-dot {
+.launch-hero__availability-dot {
   width: 8px;
   height: 8px;
-  flex: 0 0 auto;
   border-radius: 50%;
   background: var(--forest);
-  box-shadow: 0 0 0 5px rgba(34, 139, 34, 0.12);
+  box-shadow: 0 0 0 5px rgba(34, 139, 34, 0.11);
 }
 
-.founding-hero__pilot {
+.launch-hero__visual {
+  position: relative;
+  align-self: stretch;
+  min-height: 620px;
+  overflow: hidden;
+  border-radius: 34px;
+  background: #e6eadf;
+  box-shadow: 0 30px 80px rgba(48, 54, 39, 0.18);
+}
+
+.launch-hero__visual::after {
+  content: "";
   position: absolute;
-  z-index: 4;
-  right: 22px;
-  bottom: 76px;
-  min-width: 170px;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(24, 32, 21, 0.19),
+      transparent 28%
+    );
+  pointer-events: none;
+}
+
+.launch-hero__visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 620px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.launch-hero__image-label {
+  position: absolute;
+  z-index: 2;
+  right: 20px;
+  bottom: 20px;
+  min-width: 166px;
   padding: 13px 15px;
-  border: 1px solid rgba(255, 255, 255, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.32);
   border-radius: 15px;
-  background: rgba(21, 48, 29, 0.76);
+  background: rgba(20, 45, 27, 0.74);
   color: #ffffff;
   backdrop-filter: blur(14px);
-  box-shadow: 0 14px 35px rgba(13, 31, 18, 0.22);
 }
 
-.founding-hero__pilot span,
-.founding-hero__pilot strong {
+.launch-hero__image-label span,
+.launch-hero__image-label strong {
   display: block;
 }
 
-.founding-hero__pilot span {
-  font-size: 8px;
-  letter-spacing: 0.14em;
+.launch-hero__image-label span {
+  font-size: 9px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.74;
 }
 
-.founding-hero__pilot strong {
-  margin-top: 5px;
+.launch-hero__image-label strong {
+  margin-top: 4px;
   font-family: "Manrope", sans-serif;
   font-size: 14px;
 }
 
-/* Sticky header anchor correction */
+/* Keep anchor destination clear of the sticky navigation */
 #waitlist {
-  scroll-margin-top: 90px;
+  scroll-margin-top: 88px;
 }
 
-/* =========================================================
-   Medium desktop
-   ========================================================= */
-
-@media (max-width: 1150px) {
-
-  .founding-hero__card {
-    width: min(670px, 67%);
-    padding: 44px 48px;
+@media (max-width: 960px) {
+  .launch-hero {
+    padding: 30px 0 66px;
   }
 
-  .founding-hero h1 {
-    font-size: clamp(46px, 5.3vw, 68px);
-  }
-
-  .founding-hero__background img {
-    object-position: 58% center;
-  }
-}
-
-/* =========================================================
-   Tablet
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-  .founding-hero {
+  .launch-hero__inner {
+    grid-template-columns: 1fr;
     min-height: auto;
-    padding-bottom: 42px;
-    background: #f5f5dc;
+    gap: 30px;
   }
 
-  .founding-hero__background {
-    position: relative;
-    height: 520px;
+  .launch-hero__content {
+    max-width: 760px;
+    padding: 28px 0 0;
   }
 
-  .founding-hero__background img {
-    object-position: 62% center;
+  .launch-hero__visual {
+    min-height: 520px;
   }
 
-  .founding-hero__shade {
-    height: 520px;
-    background:
-      linear-gradient(
-        to bottom,
-        rgba(250, 248, 240, 0.04) 0%,
-        rgba(250, 248, 240, 0.05) 55%,
-        rgba(245, 245, 220, 0.92) 100%
-      );
-  }
-
-  .founding-hero__shell {
-    min-height: auto;
-    display: block;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .founding-hero__card {
-    width: min(720px, calc(100% - 28px));
-    margin: -78px auto 0;
-    padding: 38px 40px;
-  }
-
-  .founding-hero h1 {
-    font-size: clamp(46px, 7vw, 64px);
-  }
-
-  .founding-hero__pilot {
-    top: 20px;
-    right: 20px;
-    bottom: auto;
+  .launch-hero__visual img {
+    min-height: 520px;
   }
 }
-
-/* =========================================================
-   Mobile
-   ========================================================= */
 
 @media (max-width: 580px) {
-
-  .founding-hero {
-    padding-bottom: 28px;
+  .launch-hero {
+    padding: 12px 0 46px;
   }
 
-  .founding-hero__background {
-    height: 390px;
+  .launch-hero__inner {
+    width: 100%;
+    gap: 0;
   }
 
-  .founding-hero__background img {
-    object-position: 67% center;
+  .launch-hero__content {
+    order: 2;
+    width: calc(100% - 24px);
+    margin: -30px auto 0;
+    padding: 24px 20px 26px;
+    border: 1px solid rgba(34, 139, 34, 0.13);
+    border-radius: 24px;
+    background: rgba(250, 249, 242, 0.97);
+    box-shadow: 0 18px 45px rgba(38, 64, 40, 0.14);
+    backdrop-filter: blur(15px);
   }
 
-  .founding-hero__shade {
-    height: 390px;
+  .launch-hero__visual {
+    order: 1;
+    width: 100%;
+    min-height: 420px;
+    border-radius: 0 0 28px 28px;
+    box-shadow: none;
   }
 
-  .founding-hero__card {
-    width: calc(100% - 20px);
-    margin-top: -52px;
-    padding: 26px 20px 28px;
-    border-radius: 23px;
+  .launch-hero__visual img {
+    min-height: 420px;
+    object-position: 57% center;
   }
 
-  .founding-hero__brand {
+  .launch-hero__image-label {
+    top: 16px;
+    right: 14px;
+    bottom: auto;
+    min-width: 145px;
+  }
+
+  .launch-hero__brand-line {
     margin-bottom: 16px;
-    font-size: 11px;
+    font-size: 12px;
   }
 
-  .founding-hero h1 {
-    font-size: clamp(38px, 11.8vw, 50px);
+  .launch-hero h1 {
+    font-size: clamp(40px, 12vw, 52px);
     line-height: 1;
   }
 
-  .founding-hero__intro {
+  .launch-hero__intro {
     margin-top: 21px;
     font-size: 16px;
   }
 
-  .founding-hero__together {
+  .launch-hero__together {
     font-size: 14px;
   }
 
-  .founding-hero__benefits {
+  .launch-hero__benefits {
     display: grid;
-    gap: 8px;
   }
 
-  .founding-hero__benefit {
+  .launch-hero__benefits > span {
     width: max-content;
     max-width: 100%;
   }
 
-  .founding-hero__actions {
+  .launch-hero__actions {
     display: grid;
-    gap: 13px;
+    gap: 14px;
   }
 
-  .founding-hero__primary {
+  .launch-hero__primary {
     width: 100%;
-    min-height: 58px;
   }
 
-  .founding-hero__whatsapp {
+  .launch-hero__whatsapp {
     text-align: center;
   }
 
-  .founding-hero__assurance {
+  .launch-hero__assurance {
     justify-content: center;
-    line-height: 1.7;
     text-align: center;
+    line-height: 1.6;
   }
 
-  .founding-hero__availability {
+  .launch-hero__availability {
     justify-content: center;
     text-align: center;
     line-height: 1.45;
-  }
-
-  .founding-hero__pilot {
-    top: 14px;
-    right: 12px;
-    min-width: 145px;
-    padding: 11px 13px;
   }
 }
 /* =========================================================
